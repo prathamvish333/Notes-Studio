@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import axios from 'axios';
+import { useSoundEffects } from '../../hooks/useSoundEffects';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
@@ -13,9 +14,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { playBlip, playType } = useSoundEffects();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    playBlip();
     setLoading(true);
     setError(null);
     try {
@@ -72,7 +75,7 @@ export default function LoginPage() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { playType(); setEmail(e.target.value); }}
                 className="terminal-input"
                 placeholder="user@system.local"
                 required
@@ -86,7 +89,7 @@ export default function LoginPage() {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { playType(); setPassword(e.target.value); }}
                 className="terminal-input tracking-widest"
                 placeholder="••••••••"
                 required
@@ -108,7 +111,7 @@ export default function LoginPage() {
               Unidentified user?{' '}
               <button
                 type="button"
-                onClick={() => router.push('/signup')}
+                onClick={() => { playBlip(); router.push('/signup'); }}
                 className="text-terminal-cyan underline-offset-4 hover:underline"
               >
                 Request Access

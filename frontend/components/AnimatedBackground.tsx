@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import MatrixRain from './MatrixRain';
 
 export default function AnimatedBackground() {
     const { scrollY } = useScroll();
@@ -18,6 +19,7 @@ export default function AnimatedBackground() {
 
     return (
         <div className="fixed inset-0 -z-10 overflow-hidden bg-background">
+            <MatrixRain />
             {/* Deep Background Grid */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#111_1px,transparent_1px),linear-gradient(to_bottom,#111_1px,transparent_1px)] bg-[size:40px_40px] opacity-20"></div>
 

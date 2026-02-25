@@ -3,6 +3,8 @@
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import BootSequence from './BootSequence';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
@@ -31,6 +33,7 @@ export default function NotesLayout() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const { playBlip, playType } = useSoundEffects();
 
   const token =
     typeof window !== 'undefined'
@@ -93,6 +96,7 @@ export default function NotesLayout() {
   }, []);
 
   const selectNote = (note: Note) => {
+    playBlip();
     setSelectedId(note.id);
     setDraftTitle(note.title);
     setDraftContent(note.content);
@@ -182,6 +186,7 @@ export default function NotesLayout() {
   };
 
   const handleLogout = () => {
+    playBlip();
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem('token');
       window.localStorage.removeItem('user');
@@ -192,119 +197,151 @@ export default function NotesLayout() {
   const selectedNote = notes.find((n) => n.id === selectedId) || null;
 
   return (
-    <div className="flex h-[calc(100vh-80px)] w-full gap-4">
-      {/* Sidebar: Library */}
-      <aside className="terminal-panel flex w-56 flex-col p-4">
-        <div className="mb-6 font-mono text-xs uppercase tracking-widest text-terminal-cyan">
-          drwxr-xr-x library
-        </div>
-
-        <button
-          onClick={handleCreate}
-          disabled={saving}
-          className="mb-4 flex items-center justify-center gap-2 rounded-md border border-terminal-green/40 bg-terminal-green/10 py-2 font-mono text-xs font-bold text-terminal-green transition-all hover:bg-terminal-green/20 focus:outline-none focus:ring-1 focus:ring-terminal-green disabled:opacity-50"
-        >
-          <span>+</span>
-          <span>touch new_note.txt</span>
-        </button>
-
-        <div className="mt-auto space-y-2 border-t border-terminal-dim pt-4 font-mono text-xs text-terminal-muted">
-          <div className="flex items-center gap-2 text-terminal-text">
-            <span className="h-2 w-2 rounded-full bg-terminal-green shadow-[0_0_5px_#00ff41]"></span>
-            <span className="truncate">{user ? user.full_name || user.email : 'guest@local'}</span>
+    <BootSequence>
+      <div className="flex h-[calc(100vh-80px)] w-full gap-4">
+        {/* Sidebar: Library */}
+        <aside className="terminal-panel flex w-56 flex-col p-4">
+          <div className="mb-6 font-mono text-xs uppercase tracking-widest text-terminal-cyan">
+            drwxr-xr-x library
           </div>
+
           <button
-            onClick={handleLogout}
-            className="text-red-400 hover:text-red-300 hover:underline"
+            onClick={handleCreate}
+            disabled={saving}
+            className="mb-4 flex items-center justify-center gap-2 rounded-md border border-terminal-green/40 bg-terminal-green/10 py-2 font-mono text-xs font-bold text-terminal-green transition-all hover:bg-terminal-green/20 focus:outline-none focus:ring-1 focus:ring-terminal-green disabled:opacity-50"
           >
-            exit
+            <span>+</span>
+            <span>touch new_note.txt</span>
           </button>
-        </div>
-      </aside>
 
-      {/* Note List */}
-      <section className="terminal-panel flex w-80 flex-col overflow-hidden">
-        <div className="flex items-center justify-between border-b border-terminal-dim bg-terminal-dim/30 px-4 py-3 font-mono text-xs text-terminal-text">
-          <span>~/notes</span>
-          <span className="text-terminal-cyan">[{notes.length} total]</span>
-        </div>
+          <div className="mt-8 mb-auto">
+            <div className="mb-3 font-mono text-[10px] uppercase tracking-widest text-terminal-green/70">
+              System Links
+            </div>
+            <div className="flex flex-col gap-3 font-mono text-xs">
+              <a href="http://localhost:30000" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-terminal-text hover:text-terminal-cyan transition-colors" onClick={() => playBlip()}>
+                <span className="opacity-50 text-[10px]">&gt;</span> prometheus
+              </a>
+              <a href="http://localhost:32000" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-terminal-text hover:text-terminal-cyan transition-colors" onClick={() => playBlip()}>
+                <span className="opacity-50 text-[10px]">&gt;</span> grafana
+              </a>
+              <a href="http://localhost:8080" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-terminal-text hover:text-terminal-cyan transition-colors" onClick={() => playBlip()}>
+                <span className="opacity-50 text-[10px]">&gt;</span> jenkins
+              </a>
+              <div className="my-1 border-t border-terminal-dim/50"></div>
+              <a href="https://linkedin.com/in/prathamvishwakarma" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-terminal-text hover:text-terminal-green transition-colors" onClick={() => playBlip()}>
+                <span className="opacity-50 text-[10px]">&gt;</span> user.linkedin
+              </a>
+              <a href="https://github.com/prathamvish333" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-terminal-text hover:text-terminal-green transition-colors" onClick={() => playBlip()}>
+                <span className="opacity-50 text-[10px]">&gt;</span> user.github
+              </a>
+              <a href="mailto:prathamvishwakarma2000@gmail.com" className="flex items-center gap-2 text-terminal-text hover:text-terminal-green transition-colors" onClick={() => playBlip()}>
+                <span className="opacity-50 text-[10px]">&gt;</span> user.email
+              </a>
+            </div>
+          </div>
 
-        <div className="flex-1 overflow-y-auto">
-          {loading ? (
-            <div className="flex h-full animate-pulse items-center justify-center text-xs text-terminal-muted">
-              loading blocks...
+          <div className="mt-auto space-y-2 border-t border-terminal-dim pt-4 font-mono text-xs text-terminal-muted">
+            <div className="flex items-center gap-2 text-terminal-text">
+              <span className="h-2 w-2 rounded-full bg-terminal-green shadow-[0_0_5px_#00ff41]"></span>
+              <span className="truncate">{user ? user.full_name || user.email : 'guest@local'}</span>
             </div>
-          ) : notes.length === 0 ? (
-            <div className="flex h-full items-center justify-center text-center text-xs text-terminal-muted">
-              Directory is empty.
-            </div>
-          ) : (
-            <ul className="divide-y divide-terminal-dim">
-              {notes.map((note) => (
-                <li key={note.id}>
-                  <button
-                    onClick={() => selectNote(note)}
-                    className={`block w-full px-4 py-3 text-left transition-colors ${selectedId === note.id
+            <button
+              onClick={handleLogout}
+              className="text-red-400 hover:text-red-300 hover:underline"
+            >
+              exit
+            </button>
+          </div>
+        </aside>
+
+        {/* Note List */}
+        <section className="terminal-panel flex w-80 flex-col overflow-hidden">
+          <div className="flex items-center justify-between border-b border-terminal-dim bg-terminal-dim/30 px-4 py-3 font-mono text-xs text-terminal-text">
+            <span>~/notes</span>
+            <span className="text-terminal-cyan">[{notes.length} total]</span>
+          </div>
+
+          <div className="flex-1 overflow-y-auto">
+            {loading ? (
+              <div className="flex h-full animate-pulse items-center justify-center text-xs text-terminal-muted">
+                loading blocks...
+              </div>
+            ) : notes.length === 0 ? (
+              <div className="flex h-full items-center justify-center text-center text-xs text-terminal-muted">
+                Directory is empty.
+              </div>
+            ) : (
+              <ul className="divide-y divide-terminal-dim">
+                {notes.map((note) => (
+                  <li key={note.id}>
+                    <button
+                      onClick={() => selectNote(note)}
+                      className={`block w-full px-4 py-3 text-left transition-colors ${selectedId === note.id
                         ? 'border-l-2 border-terminal-green bg-terminal-dim text-terminal-green'
                         : 'border-l-2 border-transparent hover:bg-terminal-dim/50 hover:text-terminal-text text-terminal-muted'
-                      }`}
-                  >
-                    <div className="font-mono text-xs font-bold uppercase tracking-tight">
-                      {note.title || 'untitled.md'}
-                    </div>
-                    <div className="mt-1 line-clamp-2 font-mono text-[10px] opacity-70">
-                      {note.content || '/* empty */'}
-                    </div>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </section>
+                        }`}
+                    >
+                      <div className="font-mono text-xs font-bold uppercase tracking-tight">
+                        {note.title || 'untitled.md'}
+                      </div>
+                      <div className="mt-1 line-clamp-2 font-mono text-[10px] opacity-70">
+                        {note.content || '/* empty */'}
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
 
-      {/* Editor */}
-      <section className="terminal-panel flex flex-1 flex-col overflow-hidden relative">
-        <div className="flex items-center justify-between border-b border-terminal-dim bg-terminal-dim/30 px-4 py-3">
-          <input
-            type="text"
-            placeholder="filename.md"
-            value={draftTitle}
-            onChange={(e) => setDraftTitle(e.target.value)}
-            className="w-full bg-transparent font-mono text-sm font-bold text-terminal-cyan outline-none placeholder:text-terminal-muted"
+        {/* Editor */}
+        <section className="terminal-panel flex flex-1 flex-col overflow-hidden relative">
+          <div className="flex items-center justify-between border-b border-terminal-dim bg-terminal-dim/30 px-4 py-3">
+            <input
+              type="text"
+              placeholder="filename.md"
+              value={draftTitle}
+              onChange={(e) => setDraftTitle(e.target.value)}
+              className="w-full bg-transparent font-mono text-sm font-bold text-terminal-cyan outline-none placeholder:text-terminal-muted"
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={handleDelete}
+                disabled={!selectedNote || saving}
+                className="rounded border border-red-500/30 px-3 py-1 font-mono text-xs text-red-400 transition hover:bg-red-500/10 disabled:opacity-50"
+              >
+                rm
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={!selectedNote || saving}
+                className="rounded bg-terminal-green px-4 py-1 font-mono text-xs font-bold text-background transition hover:bg-[#00cc33] disabled:opacity-70 shadow-[0_0_10px_rgba(0,255,65,0.4)]"
+              >
+                {saving ? 'saving...' : ':wq'}
+              </button>
+            </div>
+          </div>
+
+          <textarea
+            placeholder="> type your commands here..."
+            value={draftContent}
+            onChange={(e) => {
+              playType();
+              setDraftContent(e.target.value);
+            }}
+            className="h-full w-full resize-none bg-transparent p-5 font-mono text-sm leading-relaxed text-terminal-text outline-none placeholder:text-terminal-muted"
           />
-          <div className="flex gap-2">
-            <button
-              onClick={handleDelete}
-              disabled={!selectedNote || saving}
-              className="rounded border border-red-500/30 px-3 py-1 font-mono text-xs text-red-400 transition hover:bg-red-500/10 disabled:opacity-50"
-            >
-              rm
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={!selectedNote || saving}
-              className="rounded bg-terminal-green px-4 py-1 font-mono text-xs font-bold text-background transition hover:bg-[#00cc33] disabled:opacity-70 shadow-[0_0_10px_rgba(0,255,65,0.4)]"
-            >
-              {saving ? 'saving...' : ':wq'}
-            </button>
-          </div>
-        </div>
 
-        <textarea
-          placeholder="> type your commands here..."
-          value={draftContent}
-          onChange={(e) => setDraftContent(e.target.value)}
-          className="h-full w-full resize-none bg-transparent p-5 font-mono text-sm leading-relaxed text-terminal-text outline-none placeholder:text-terminal-muted"
-        />
-
-        {error && (
-          <div className="absolute bottom-0 w-full border-t border-red-500/30 bg-red-500/10 px-4 py-2 text-xs text-red-400 backdrop-blur-sm">
-            ERROR: {error}
-          </div>
-        )}
-      </section>
-    </div>
+          {error && (
+            <div className="absolute bottom-0 w-full border-t border-red-500/30 bg-red-500/10 px-4 py-2 text-xs text-red-400 backdrop-blur-sm">
+              ERROR: {error}
+            </div>
+          )}
+        </section>
+      </div>
+    </BootSequence>
   );
 }
 

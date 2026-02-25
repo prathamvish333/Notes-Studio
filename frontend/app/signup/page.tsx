@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import axios from 'axios';
+import { useSoundEffects } from '../../hooks/useSoundEffects';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
@@ -14,9 +15,11 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { playBlip, playType } = useSoundEffects();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    playBlip();
     setLoading(true);
     setError(null);
     try {
@@ -75,7 +78,7 @@ export default function SignupPage() {
               <input
                 type="text"
                 value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e) => { playType(); setFullName(e.target.value); }}
                 className="terminal-input"
                 placeholder="Neo"
               />
@@ -88,7 +91,7 @@ export default function SignupPage() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { playType(); setEmail(e.target.value); }}
                 className="terminal-input"
                 placeholder="neo@matrix.local"
                 required
@@ -102,7 +105,7 @@ export default function SignupPage() {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { playType(); setPassword(e.target.value); }}
                 className="terminal-input tracking-widest"
                 placeholder="••••••••"
                 required
@@ -125,7 +128,7 @@ export default function SignupPage() {
               Credentials already established?{' '}
               <button
                 type="button"
-                onClick={() => router.push('/login')}
+                onClick={() => { playBlip(); router.push('/login'); }}
                 className="text-terminal-green underline-offset-4 hover:underline"
               >
                 Authenticate Here
