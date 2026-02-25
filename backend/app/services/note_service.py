@@ -4,42 +4,44 @@ from .. import crud, models, schemas
 
 
 DEFAULT_NOTE_TITLE = "Welcome to Notes Studio"
-DEFAULT_NOTE_CONTENT = """Welcome to Notes Studio!
+DEFAULT_NOTE_CONTENT = """Welcome to Notes Studio.
 
-Notes Studio is created by Pratham Vishwakarma, a Backend & DevOps Engineer with a strong focus on building scalable services, automation-driven systems, and highly available architectures.
+Notes Studio is a production-style application designed to reflect how modern backend systems are structured, secured, and maintained. Rather than serving as a basic CRUD demonstration, this project emphasizes clean API design, robust data integrity, and practical software engineering patterns utilized in scalable architectures.
 
-This project is not just a basic CRUD application; it serves as a live, production-grade showcase of modern software engineering patterns, system design, and DevOps principles.
+🔹 Project Overview
 
-🔹 Engineering Skills & Expertise Highlighted:
-• Backend Development: FastAPI, Python, SQLAlchemy ORM, Pydantic
-• Database Management: PostgreSQL, Data Modeling, Migrations
-• Security & Authentication: Stateless JWT Auth, Secure API Routing
-• Containerization: Docker, Minimal multi-stage builds (Next.js Standalone, Python slim) 
-• Orchestration: Kubernetes (Deployments, Services, Secrets, Namespaces, LoadBalancers)
-• Infrastructure: 3-Tier Architecture (Frontend, API, DB)
+Notes Studio is built using:
 
-🔹 Kubernetes & Docker Architecture
-Notes Studio is fully deployed in a 3-tier containerized architecture on Kubernetes:
-1. Frontend Deployment (Next.js optimized standalone build)
-2. Backend API Deployment (FastAPI, scaled with multiple replicas for High Availability)
-3. Database Deployment (PostgreSQL with secure internal credentials)
+• FastAPI for high-performance API development
+• PostgreSQL for persistent data storage
+• Next.js for a lightweight, optimized frontend interface
+• SQLAlchemy ORM for database interaction
+• Pydantic for strict data validation
+• JWT Authentication for secure access control
 
-These services are orchestrated using Kubernetes Services, Namespaces, and securely managed Secrets, demonstrating real-world cloud-native capabilities.
+🔹 3-Tier Containerized Architecture
 
-🚀 Infrastructure Roadmap:
-We are continuing to expand this cluster with:
-• ArgoCD for GitOps continuous delivery
-• Prometheus & Grafana for advanced metrics and log monitoring
+This project has been Dockerized into a full 3-tier architecture:
+1. Frontend Container (Next.js Standalone Build)
+2. Backend API Container (FastAPI with Uvicorn)
+3. Database Container (PostgreSQL)
+They communicate over an isolated Docker network using Docker Compose.
+
+🚀 Future DevOps Infrastructure Plannings:
+We are actively working to migrate this project to a robust Kubernetes (K8s) environment, which will feature:
+• ArgoCD for GitOps continuous deployment
+• Prometheus & Grafana for advanced system monitoring and metrics
 
 🔹 API Inspection & Security Demo
-Explore the production-style API interactions live:
-1. Right-click anywhere and select "Inspect" (F12).
-2. Navigate to the "Network" tab.
-3. Refresh the page or click "New note".
-4. Click any backend request (like `notes/`) and check the "Headers" tab.
-5. You will see an `Authorization: Bearer <token>` header verifying your identity seamlessly.
 
-🔹 Connect with the Creator
+You can inspect the production-style API routing and security right from your browser!
+1. Right-click anywhere on the page and select "Inspect" (or press F12).
+2. Go to the "Network" tab.
+3. Refresh the page or click "New note".
+4. Click on any of the network requests (like `notes/`) and look at the "Headers" tab.
+5. You will see an `Authorization: Bearer <token>` header being sent to the backend. This is the JWT token that securely identifies you without using session cookies!
+
+🔹 Developer Profiles
 
 LinkedIn:
 https://www.linkedin.com/in/prathamvishwakarma/
