@@ -46,27 +46,39 @@ function ThemeToggle() {
   );
 }
 
+import AnimatedBackground from '../components/AnimatedBackground';
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-background-light text-slate-900 antialiased dark:bg-background-dark dark:text-slate-100">
+      <body className="bg-background text-terminal-text antialiased">
+        <AnimatedBackground />
+
         <div className="flex min-h-screen flex-col">
-          <header className="flex items-center justify-between border-b border-slate-200/70 bg-surface-light/80 px-6 py-3 backdrop-blur-md dark:border-slate-800 dark:bg-surface-dark/80">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-xl bg-gradient-to-tr from-slate-900 via-slate-600 to-slate-300 shadow-sm dark:from-slate-100 dark:via-slate-500 dark:to-slate-900" />
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold tracking-tight">Notes Studio</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">
-                  Crafted by Pratham Vishwakarma
-                </span>
+          {/* Top Panel / Terminal Header */}
+          <header className="fixed top-0 z-50 flex w-full items-center justify-between border-b border-terminal-green/20 bg-terminal-board/80 px-6 py-3 backdrop-blur-md">
+            <div className="flex items-center gap-3">
+              {/* Linux Terminal Dots */}
+              <div className="flex gap-1.5">
+                <div className="h-3 w-3 rounded-full bg-red-500/80 shadow-[0_0_5px_rgba(239,68,68,0.5)]"></div>
+                <div className="h-3 w-3 rounded-full bg-yellow-500/80 shadow-[0_0_5px_rgba(234,179,8,0.5)]"></div>
+                <div className="h-3 w-3 rounded-full bg-terminal-green/80 shadow-[0_0_5px_rgba(0,255,65,0.5)]"></div>
+              </div>
+
+              <div className="ml-4 flex items-baseline gap-2 font-mono">
+                <span className="text-sm font-bold text-terminal-green tracking-tight">notes-studio</span>
+                <span className="text-xs text-terminal-muted">~/projects/pratham</span>
               </div>
             </div>
-            <ThemeToggle />
           </header>
-          <main className="flex-1">{children}</main>
+
+          <main className="flex-1 pt-16">
+            <div className="mx-auto max-w-5xl p-6">
+              {children}
+            </div>
+          </main>
         </div>
       </body>
     </html>
   );
 }
-

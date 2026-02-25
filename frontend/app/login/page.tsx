@@ -37,62 +37,85 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-56px)] items-center justify-center bg-gradient-to-b from-background-light to-surface-light dark:from-background-dark dark:to-surface-dark">
-      <div className="glass-panel w-full max-w-md px-8 py-10">
-        <h1 className="mb-2 text-center text-2xl font-semibold tracking-tight">
-          Welcome back
-        </h1>
-        <p className="mb-6 text-center text-sm text-slate-500 dark:text-slate-400">
-          Sign in to continue writing thoughtful notes.
-        </p>
-        {error && (
-          <div className="mb-4 rounded-md border border-red-300/70 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-700/70 dark:bg-red-950/50 dark:text-red-200">
-            {error}
+    <div className="flex min-h-[calc(100vh-80px)] items-center justify-center p-4">
+      <div className="terminal-panel w-full max-w-md overflow-hidden relative">
+        {/* Terminal Header Bar */}
+        <div className="flex items-center gap-2 border-b border-terminal-dim bg-terminal-dim/30 px-4 py-2">
+          <div className="h-2.5 w-2.5 rounded-full bg-red-500/80"></div>
+          <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/80"></div>
+          <div className="h-2.5 w-2.5 rounded-full bg-terminal-green/80"></div>
+          <span className="ml-2 font-mono text-[10px] text-terminal-muted">bash - login</span>
+        </div>
+
+        <div className="px-8 py-8">
+          <div className="mb-6 flex flex-col items-center">
+            <span className="text-4xl">💻</span>
+            <h1 className="mt-4 font-mono text-xl font-bold tracking-tight text-terminal-green">
+              AUTH_REQUIRED
+            </h1>
+            <p className="mt-2 font-mono text-xs text-terminal-muted">
+              Enter credentials to access secure terminal.
+            </p>
           </div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-200/80 bg-white px-3 py-2 text-sm outline-none ring-0 transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-slate-800"
-              required
-            />
+
+          {error && (
+            <div className="mb-6 border-l-2 border-red-500 bg-red-500/10 p-3 font-mono text-xs text-red-400">
+              [ERROR]: {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-terminal-cyan">
+                Username (Email)
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="terminal-input"
+                placeholder="user@system.local"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-terminal-cyan">
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="terminal-input tracking-widest"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="terminal-btn mt-6"
+            >
+              <span className="mr-2">&gt;</span>
+              {loading ? 'AUTHENTICATING...' : 'EXECUTE_LOGIN'}
+            </button>
+          </form>
+
+          <div className="mt-8 border-t border-terminal-dim pt-6 text-center">
+            <p className="font-mono text-[10px] text-terminal-muted">
+              Unidentified user?{' '}
+              <button
+                type="button"
+                onClick={() => router.push('/signup')}
+                className="text-terminal-cyan underline-offset-4 hover:underline"
+              >
+                Request Access
+              </button>
+            </p>
           </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-slate-200/80 bg-white px-3 py-2 text-sm outline-none ring-0 transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-slate-800"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex w-full items-center justify-center rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
-          >
-            {loading ? 'Signing in…' : 'Sign in'}
-          </button>
-        </form>
-        <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
-          New here?{' '}
-          <button
-            type="button"
-            onClick={() => router.push('/signup')}
-            className="font-medium text-slate-900 underline-offset-2 hover:underline dark:text-slate-100"
-          >
-            Create an account
-          </button>
-        </p>
+        </div>
       </div>
     </div>
   );

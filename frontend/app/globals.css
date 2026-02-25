@@ -8,11 +8,37 @@ body {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
-    ui-sans-serif, sans-serif;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  background-color: #050505;
+  color: #e0e0e0;
 }
 
-.glass-panel {
-  @apply rounded-2xl border border-slate-200/70 bg-surface-light/80 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-surface-dark/80;
+/* Custom Scrollbar for Terminal feel */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ff41;
+}
+
+.terminal-panel {
+  @apply rounded-xl border border-terminal-dim bg-terminal-board/90 shadow-terminal-glow backdrop-blur-md;
+}
+
+.terminal-input {
+  @apply w-full rounded-md border border-terminal-dim bg-background px-4 py-2 font-mono text-sm text-terminal-text focus:border-terminal-green focus:outline-none focus:ring-1 focus:ring-terminal-green/50;
+}
+
+.terminal-btn {
+  @apply flex w-full items-center justify-center rounded-md border border-terminal-green/50 bg-terminal-green/10 px-4 py-2 font-mono text-terminal-green transition-all hover:bg-terminal-green/20 hover:shadow-terminal-glow-hover;
+}

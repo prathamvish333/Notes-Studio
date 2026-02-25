@@ -39,8 +39,8 @@ export default function NotesLayout() {
 
   const authHeaders = token
     ? {
-        Authorization: `Bearer ${token}`,
-      }
+      Authorization: `Bearer ${token}`,
+    }
     : {};
 
   const loadNotes = async () => {
@@ -192,128 +192,118 @@ export default function NotesLayout() {
   const selectedNote = notes.find((n) => n.id === selectedId) || null;
 
   return (
-    <div className="flex h-[calc(100vh-56px)] flex-col bg-background-light dark:bg-background-dark">
-      <div className="flex h-full gap-4 p-4">
-        {/* Sidebar */}
-        <aside className="glass-panel flex w-52 flex-col px-3 py-4">
-          <div className="mb-6 text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            Library
+    <div className="flex h-[calc(100vh-80px)] w-full gap-4">
+      {/* Sidebar: Library */}
+      <aside className="terminal-panel flex w-56 flex-col p-4">
+        <div className="mb-6 font-mono text-xs uppercase tracking-widest text-terminal-cyan">
+          drwxr-xr-x library
+        </div>
+
+        <button
+          onClick={handleCreate}
+          disabled={saving}
+          className="mb-4 flex items-center justify-center gap-2 rounded-md border border-terminal-green/40 bg-terminal-green/10 py-2 font-mono text-xs font-bold text-terminal-green transition-all hover:bg-terminal-green/20 focus:outline-none focus:ring-1 focus:ring-terminal-green disabled:opacity-50"
+        >
+          <span>+</span>
+          <span>touch new_note.txt</span>
+        </button>
+
+        <div className="mt-auto space-y-2 border-t border-terminal-dim pt-4 font-mono text-xs text-terminal-muted">
+          <div className="flex items-center gap-2 text-terminal-text">
+            <span className="h-2 w-2 rounded-full bg-terminal-green shadow-[0_0_5px_#00ff41]"></span>
+            <span className="truncate">{user ? user.full_name || user.email : 'guest@local'}</span>
           </div>
           <button
-            onClick={handleCreate}
-            disabled={saving}
-            className="mb-4 inline-flex items-center justify-center rounded-xl bg-slate-900 px-3 py-2 text-xs font-medium text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+            onClick={handleLogout}
+            className="text-red-400 hover:text-red-300 hover:underline"
           >
-            New note
+            exit
           </button>
-          <div className="mt-auto space-y-1 text-xs text-slate-500 dark:text-slate-400">
-            <div className="truncate">
-              {user ? user.full_name || user.email : 'Guest'}
+        </div>
+      </aside>
+
+      {/* Note List */}
+      <section className="terminal-panel flex w-80 flex-col overflow-hidden">
+        <div className="flex items-center justify-between border-b border-terminal-dim bg-terminal-dim/30 px-4 py-3 font-mono text-xs text-terminal-text">
+          <span>~/notes</span>
+          <span className="text-terminal-cyan">[{notes.length} total]</span>
+        </div>
+
+        <div className="flex-1 overflow-y-auto">
+          {loading ? (
+            <div className="flex h-full animate-pulse items-center justify-center text-xs text-terminal-muted">
+              loading blocks...
             </div>
+          ) : notes.length === 0 ? (
+            <div className="flex h-full items-center justify-center text-center text-xs text-terminal-muted">
+              Directory is empty.
+            </div>
+          ) : (
+            <ul className="divide-y divide-terminal-dim">
+              {notes.map((note) => (
+                <li key={note.id}>
+                  <button
+                    onClick={() => selectNote(note)}
+                    className={`block w-full px-4 py-3 text-left transition-colors ${selectedId === note.id
+                        ? 'border-l-2 border-terminal-green bg-terminal-dim text-terminal-green'
+                        : 'border-l-2 border-transparent hover:bg-terminal-dim/50 hover:text-terminal-text text-terminal-muted'
+                      }`}
+                  >
+                    <div className="font-mono text-xs font-bold uppercase tracking-tight">
+                      {note.title || 'untitled.md'}
+                    </div>
+                    <div className="mt-1 line-clamp-2 font-mono text-[10px] opacity-70">
+                      {note.content || '/* empty */'}
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      {/* Editor */}
+      <section className="terminal-panel flex flex-1 flex-col overflow-hidden relative">
+        <div className="flex items-center justify-between border-b border-terminal-dim bg-terminal-dim/30 px-4 py-3">
+          <input
+            type="text"
+            placeholder="filename.md"
+            value={draftTitle}
+            onChange={(e) => setDraftTitle(e.target.value)}
+            className="w-full bg-transparent font-mono text-sm font-bold text-terminal-cyan outline-none placeholder:text-terminal-muted"
+          />
+          <div className="flex gap-2">
             <button
-              type="button"
-              onClick={handleLogout}
-              className="text-xs text-slate-600 underline-offset-2 hover:underline dark:text-slate-300"
+              onClick={handleDelete}
+              disabled={!selectedNote || saving}
+              className="rounded border border-red-500/30 px-3 py-1 font-mono text-xs text-red-400 transition hover:bg-red-500/10 disabled:opacity-50"
             >
-              Sign out
+              rm
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={!selectedNote || saving}
+              className="rounded bg-terminal-green px-4 py-1 font-mono text-xs font-bold text-background transition hover:bg-[#00cc33] disabled:opacity-70 shadow-[0_0_10px_rgba(0,255,65,0.4)]"
+            >
+              {saving ? 'saving...' : ':wq'}
             </button>
           </div>
-        </aside>
+        </div>
 
-        {/* Notes list */}
-        <section className="glass-panel flex w-72 flex-col overflow-hidden">
-          <div className="flex items-center justify-between border-b border-slate-200/70 px-3 py-2 text-xs font-medium text-slate-500 dark:border-slate-800 dark:text-slate-400">
-            <span>Notes</span>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600 dark:bg-slate-900 dark:text-slate-300">
-              {notes.length}
-            </span>
-          </div>
-          <div className="flex-1 overflow-y-auto">
-            {loading ? (
-              <div className="flex h-full items-center justify-center text-xs text-slate-500 dark:text-slate-400">
-                Loading your notes…
-              </div>
-            ) : notes.length === 0 ? (
-              <div className="flex h-full items-center justify-center px-4 text-center text-xs text-slate-500 dark:text-slate-400">
-                No notes yet. Create your first one to get started.
-              </div>
-            ) : (
-              <ul className="divide-y divide-slate-200/70 dark:divide-slate-800">
-                {notes.map((note) => (
-                  <li key={note.id}>
-                    <button
-                      type="button"
-                      onClick={() => selectNote(note)}
-                      className={`block w-full px-3 py-2 text-left text-xs transition ${
-                        selectedId === note.id
-                          ? 'bg-slate-900 text-slate-50 dark:bg-slate-100 dark:text-slate-900'
-                          : 'hover:bg-slate-100 dark:hover:bg-slate-900'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="truncate font-medium">
-                          {note.title || 'Untitled'}
-                        </span>
-                      </div>
-                      <p
-                        className={`mt-1 line-clamp-2 text-[11px] ${
-                          selectedId === note.id
-                            ? 'text-slate-200 dark:text-slate-700'
-                            : 'text-slate-500 dark:text-slate-400'
-                        }`}
-                      >
-                        {note.content || 'Empty note'}
-                      </p>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </section>
+        <textarea
+          placeholder="> type your commands here..."
+          value={draftContent}
+          onChange={(e) => setDraftContent(e.target.value)}
+          className="h-full w-full resize-none bg-transparent p-5 font-mono text-sm leading-relaxed text-terminal-text outline-none placeholder:text-terminal-muted"
+        />
 
-        {/* Editor */}
-        <section className="glass-panel flex flex-1 flex-col">
-          <div className="flex items-center justify-between border-b border-slate-200/70 px-4 py-3 dark:border-slate-800">
-            <input
-              type="text"
-              placeholder="Title"
-              value={draftTitle}
-              onChange={(e) => setDraftTitle(e.target.value)}
-              className="mr-3 w-full bg-transparent text-sm font-semibold outline-none placeholder:text-slate-400 dark:placeholder:text-slate-600"
-            />
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleDelete}
-                disabled={!selectedNote || saving}
-                className="rounded-lg border border-slate-200/80 px-3 py-1.5 text-[11px] font-medium text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900"
-              >
-                Delete
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={!selectedNote || saving}
-                className="rounded-lg bg-slate-900 px-3 py-1.5 text-[11px] font-medium text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
-              >
-                {saving ? 'Saving…' : 'Save'}
-              </button>
-            </div>
+        {error && (
+          <div className="absolute bottom-0 w-full border-t border-red-500/30 bg-red-500/10 px-4 py-2 text-xs text-red-400 backdrop-blur-sm">
+            ERROR: {error}
           </div>
-          <textarea
-            placeholder="Capture ideas, architecture notes, or interview talking points…"
-            value={draftContent}
-            onChange={(e) => setDraftContent(e.target.value)}
-            className="h-full w-full resize-none bg-transparent px-4 py-3 text-sm leading-relaxed text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-600"
-          />
-          {error && (
-            <div className="border-t border-slate-200/70 px-4 py-2 text-xs text-red-600 dark:border-slate-800 dark:text-red-300">
-              {error}
-            </div>
-          )}
-        </section>
-      </div>
+        )}
+      </section>
     </div>
   );
 }
