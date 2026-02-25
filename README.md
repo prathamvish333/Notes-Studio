@@ -13,9 +13,8 @@
 
 
 ### 2. Main Dashboard & Notes List
+<img width="3420" height="1964" alt="image" src="https://github.com/user-attachments/assets/6caf6ce5-089b-4aaf-9ec1-7897a0f71abc" />
 
-
-### 3. Secure Note Editor
 
 
 ---
