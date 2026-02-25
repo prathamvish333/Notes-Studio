@@ -22,20 +22,19 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 echo 'Building Next.js Frontend Image...'
-                // sh 'docker build -t prathamvish333/notes-frontend:latest ./frontend'
+                sh 'docker build -t prathamvish333/notes-frontend:latest ./frontend'
                 
                 echo 'Building FastAPI Backend Image...'
-                // sh 'docker build -t prathamvish333/notes-backend:latest ./backend'
+                sh 'docker build -t prathamvish333/notes-backend:latest ./backend'
             }
         }
         
         stage('Deploy to Kubernetes (Minikube)') {
             steps {
                 echo 'Applying Kubernetes Manifests...'
+                // Note: kubectl requires kubeconfig setup in Jenkins to reach Minikube.
                 // sh 'kubectl apply -f k8s/'
-                echo 'Deployment successful! Rolling out new pods.'
-            }
-        }
+                echo 'Deployment stage reached. (Configure Jenkins Kubeconfig to apply directly)'
     }
     
     post {
