@@ -61,7 +61,7 @@ export default function Dashboard() {
                 </motion.button>
 
                 <motion.button
-                    onClick={() => handleExternal('http://localhost:80')}
+                    onClick={() => handleExternal('http://localhost:32000')}
                     onMouseEnter={playType}
                     whileHover={{ scale: 1.05, y: -5 }}
                     whileTap={{ scale: 0.95 }}
@@ -73,7 +73,7 @@ export default function Dashboard() {
                 </motion.button>
 
                 <motion.button
-                    onClick={() => handleExternal('http://localhost:9090')}
+                    onClick={() => handleExternal('http://localhost:30000')}
                     onMouseEnter={playType}
                     whileHover={{ scale: 1.05, y: -5 }}
                     whileTap={{ scale: 0.95 }}
