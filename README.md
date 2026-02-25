@@ -6,7 +6,6 @@
 
 ## 📸 App Screenshots
 
-*(Upload your screenshots to your GitHub repository and replace the placeholders below with the actual image links!)*
 
 ### 1. Login & Registration
 <img width="3420" height="1974" alt="image" src="https://github.com/user-attachments/assets/edb05c76-c948-458e-bcbc-a8f6dc0a74fa" />
