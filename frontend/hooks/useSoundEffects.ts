@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
+import { useSoundContext } from '../context/SoundContext';
 
 type AudioContextType = InstanceType<typeof window.AudioContext> | null;
 
 export function useSoundEffects() {
     const audioCtxRef = useRef<AudioContextType>(null);
+    const { isMuted } = useSoundContext();
 
     const initAudio = useCallback(() => {
         if (!audioCtxRef.current && typeof window !== 'undefined') {
@@ -18,6 +20,7 @@ export function useSoundEffects() {
     }, []);
 
     const playBlip = useCallback(() => {
+        if (isMuted) return;
         initAudio();
         const ctx = audioCtxRef.current;
         if (!ctx) return;
@@ -40,6 +43,7 @@ export function useSoundEffects() {
     }, [initAudio]);
 
     const playType = useCallback(() => {
+        if (isMuted) return;
         initAudio();
         const ctx = audioCtxRef.current;
         if (!ctx) return;
@@ -62,6 +66,7 @@ export function useSoundEffects() {
     }, [initAudio]);
 
     const playBoot = useCallback(() => {
+        if (isMuted) return;
         initAudio();
         const ctx = audioCtxRef.current;
         if (!ctx) return;

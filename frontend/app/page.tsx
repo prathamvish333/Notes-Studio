@@ -1,10 +1,6 @@
-import dynamic from 'next/dynamic';
-
-const NotesLayout = dynamic(() => import('../components/NotesLayout'), {
-  ssr: false,
-});
+import { redirect } from 'next/navigation';
 
 export default function HomePage() {
-  return <NotesLayout />;
+  redirect('/dashboard');
 }
 
