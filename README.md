@@ -4,6 +4,21 @@
 
 ---
 
+## 📸 App Screenshots
+
+*(Upload your screenshots to your GitHub repository and replace the placeholders below with the actual image links!)*
+
+### 1. Login & Registration
+![Login Screenshot](https://via.placeholder.com/800x450?text=Upload+Login+Screenshot+Here)
+
+### 2. Main Dashboard & Notes List
+![Dashboard Screenshot](https://via.placeholder.com/800x450?text=Upload+Dashboard+Screenshot+Here)
+
+### 3. Secure Note Editor
+![Editor Screenshot](https://via.placeholder.com/800x450?text=Upload+Editor+Screenshot+Here)
+
+---
+
 ## 🚀 Architecture Overview
 
 Notes Studio is built using a strict **3-Tier Containerized Architecture** orchestrated by Kubernetes and Docker.
