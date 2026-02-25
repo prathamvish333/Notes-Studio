@@ -35,6 +35,8 @@ pipeline {
                 // Note: kubectl requires kubeconfig setup in Jenkins to reach Minikube.
                 // sh 'kubectl apply -f k8s/'
                 echo 'Deployment stage reached. (Configure Jenkins Kubeconfig to apply directly)'
+            }
+        }
     }
     
     post {
