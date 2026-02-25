@@ -9,15 +9,13 @@
 *(Upload your screenshots to your GitHub repository and replace the placeholders below with the actual image links!)*
 
 ### 1. Login & Registration
-<img width="3420" height="1974" alt="image" src="https://github.com/user-attachments/assets/0f7c198c-c2a2-4f13-9378-4415d4f46f5c" />
-
-
-### 2. Main Dashboard & Notes List
 <img width="3420" height="1974" alt="image" src="https://github.com/user-attachments/assets/edb05c76-c948-458e-bcbc-a8f6dc0a74fa" />
 
 
+### 2. Main Dashboard & Notes List
+
+
 ### 3. Secure Note Editor
-<img width="3420" height="1974" alt="image" src="https://github.com/user-attachments/assets/adc632f6-2f54-40df-8fe5-d74d0f9a0dd1" />
 
 
 ---
