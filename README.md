@@ -76,11 +76,8 @@ docker-compose up -d
 ```
 
 **Services Deployed via Docker Compose:**
-- **Frontend OS**: [http://localhost:3002](http://localhost:3002)
+- **Frontend OS**: [http://localhost:3000](http://localhost:3000)
 - **FastAPI / Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **Jenkins CI**: [http://localhost:8080](http://localhost:8080)
-- **Prometheus**: [http://localhost:9090](http://localhost:9090)
-- **Grafana**: [http://localhost:3001](http://localhost:3001) *(default: admin/admin)*
 
 ---
 
