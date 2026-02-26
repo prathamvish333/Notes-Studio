@@ -4,19 +4,40 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 
-export default function BootSequence({ children, onComplete }: { children: React.ReactNode, onComplete?: () => void }) {
+export default function BootSequence({ children, onComplete, mode = 'boot' }: { children: React.ReactNode, onComplete?: () => void, mode?: 'boot' | 'shutdown' | 'restart' }) {
     const [booting, setBooting] = useState(true);
     const [textIndex, setTextIndex] = useState(0);
     const { playBoot, playType } = useSoundEffects();
 
-    const bootLogs = [
-        "INITIALIZING KERNEL...",
-        "MOUNTING VIRTUAL FILESYSTEM...",
-        "LOADING SECURE PROTOCOLS...",
-        "BYPASSING MAINFRAME ENCRYPTION...",
-        "ESTABLISHING SECURE CONNECTION...",
-        "ACCESS GRANTED."
-    ];
+    const getLogs = () => {
+        if (mode === 'shutdown') {
+            return [
+                "INITIATING SHUTDOWN SEQUENCE...",
+                "TERMINATING SECURE PROTOCOLS...",
+                "UNMOUNTING VIRTUAL FILESYSTEM...",
+                "HALTING KERNEL...",
+                "CONNECTION TERMINATED."
+            ];
+        } else if (mode === 'restart') {
+            return [
+                "INITIATING SYSTEM REBOOT...",
+                "FLUSHING CACHE...",
+                "RESTARTING SERVICES...",
+                "KERNEL RELOADED.",
+                "RE-ESTABLISHING SECURE CONNECTION..."
+            ];
+        }
+        return [
+            "INITIALIZING KERNEL...",
+            "MOUNTING VIRTUAL FILESYSTEM...",
+            "LOADING SECURE PROTOCOLS...",
+            "BYPASSING MAINFRAME ENCRYPTION...",
+            "ESTABLISHING SECURE CONNECTION...",
+            "ACCESS GRANTED."
+        ];
+    };
+
+    const bootLogs = getLogs();
 
     useEffect(() => {
         // Play boot startup sound once on mount

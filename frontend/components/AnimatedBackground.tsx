@@ -10,13 +10,47 @@ export default function AnimatedBackground() {
     const y2 = useTransform(scrollY, [0, 1000], [0, -150]);
 
     const [mounted, setMounted] = useState(false);
+    const [theme, setTheme] = useState('hacker');
 
     useEffect(() => {
         setMounted(true);
+        // Load initial theme
+        const storedTheme = window.localStorage.getItem('wallpaper_theme') || 'hacker';
+        setTheme(storedTheme);
+
+        // Listen for live updates
+        const handleThemeChange = () => {
+            const newTheme = window.localStorage.getItem('wallpaper_theme') || 'hacker';
+            setTheme(newTheme);
+        };
+
+        window.addEventListener('theme_changed', handleThemeChange);
+        return () => window.removeEventListener('theme_changed', handleThemeChange);
     }, []);
 
     if (!mounted) return null;
 
+    if (theme === 'clean') {
+        return <div className="fixed inset-0 -z-10 bg-[#0a0a0a]"></div>;
+    }
+
+    if (theme === 'devops') {
+        return (
+            <div className="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#1e3a8a] to-[#020617]">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e40af_1px,transparent_1px),linear-gradient(to_bottom,#1e40af_1px,transparent_1px)] bg-[size:60px_60px] opacity-20"></div>
+                <motion.div
+                    style={{ y: y1 }}
+                    className="absolute -top-40 -left-40 h-[600px] w-[600px] rounded-full bg-blue-500 opacity-10 blur-[100px]"
+                />
+                <motion.div
+                    style={{ y: y2 }}
+                    className="absolute -bottom-40 -right-40 h-[800px] w-[800px] rounded-full bg-cyan-600 opacity-10 blur-[150px]"
+                />
+            </div>
+        );
+    }
+
+    // Default 'hacker' theme
     return (
         <div className="fixed inset-0 -z-10 overflow-hidden bg-background">
             <MatrixRain />

@@ -27,9 +27,38 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "3002:3000"
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8000
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: notes-prometheus
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: notes-grafana
+    ports:
+      - "3001:3000"
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: notes-jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    restart: unless-stopped
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
 volumes:
   postgres_data:
