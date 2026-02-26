@@ -26,7 +26,6 @@ def register_user(db: Session, user_in: schemas.UserCreate) -> schemas.AuthRespo
 
     user = crud.create_user(db, user_in=user_in)
 
-    # Create default note for new user
     create_default_note_for_user(db, user)
 
     access_token = create_access_token({"user_id": user.id, "email": user.email})

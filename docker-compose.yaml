@@ -11,6 +11,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql
 
   backend:
     build: ./backend
@@ -28,3 +30,6 @@ services:
       - "3000:3000"
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8000
+
+volumes:
+  postgres_data:

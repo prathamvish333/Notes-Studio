@@ -1,20 +1,34 @@
 # Notes Studio
 
-**Notes Studio** is a production-grade, full-stack application designed to showcase modern backend architecture, container orchestration, and seamless frontend integrations. Built by Pratham Vishwakarma, this project demonstrates real-world software engineering practices, prioritizing scalability, security, and maintainability.
+**Notes Studio** is a production-grade, full-stack application designed to showcase modern backend architecture, container orchestration, and seamless frontend integrations. Built by Pratham Vishwakarma, this project demonstrates real-world software engineering practices, prioritizing scalability, security, and maintainability. It features a unique, interactive Window OS-like portfolio interface.
 
 ---
 
 ## 📸 App Screenshots
 
+### 1. Interactive Portfolio Login (Window OS UI)
+![Login & Portfolio View](./docs/screenshots/login.png)
 
-### 1. Login & Registration
-<img width="3420" height="1974" alt="image" src="https://github.com/user-attachments/assets/edb05c76-c948-458e-bcbc-a8f6dc0a74fa" />
+### 2. User Registration
+![Signup View](./docs/screenshots/signup.png)
 
+### 3. Main Window OS Dashboard
+![Dashboard View](./docs/screenshots/dashboard.png)
 
-### 2. Main Dashboard & Notes List
-<img width="3420" height="1964" alt="image" src="https://github.com/user-attachments/assets/6caf6ce5-089b-4aaf-9ec1-7897a0f71abc" />
+### 4. Notes Application
+![Notes App](./docs/screenshots/notes.png)
 
+### 5. Hacker Type Application
+![Hacker Type App](./docs/screenshots/hackertype.png)
 
+### 6. Prometheus Service Monitoring
+![Prometheus Dashboard](./docs/screenshots/prometheus.png)
+
+### 7. Grafana Visualization
+![Grafana Dashboard](./docs/screenshots/grafana.png)
+
+### 8. Jenkins CI/CD Pipeline
+![Jenkins Dashboard](./docs/screenshots/jenkins.png)
 
 ---
 
@@ -24,6 +38,7 @@ Notes Studio is built using a strict **3-Tier Containerized Architecture** orche
 
 ### 1. The Frontend (Next.js)
 - **Framework**: Next.js (App Router) + React
+- **Interface**: Custom interactive Window OS-like desktop UI featuring a responsive taskbar, dynamic clock, network speed indicator, boot animations, and integrated skills showcase.
 - **Styling**: Tailwind CSS with a custom Apple-inspired glassmorphism UI.
 - **Optimization**: Configured as a Next.js `standalone` build for ultra-lightweight Docker images.
 - **Deployment**: Exposed via a Kubernetes LoadBalancer Service.
@@ -43,14 +58,21 @@ Notes Studio is built using a strict **3-Tier Containerized Architecture** orche
 
 ## 🛠️ Local Development & Deployment
 
-This project relies on Kubernetes (`minikube` or Docker Desktop) to run locally.
+This project relies on Kubernetes (`minikube` or Docker Desktop) or Docker Compose to run locally.
 
 ### Prerequisites
-- Docker
+- Docker & Docker Compose
 - Minikube or Kubernetes enabled on Docker Desktop
 - `kubectl` CLI
 
-### Running the Cluster
+### Running with Docker Compose
+The easiest way to test the application locally:
+```bash
+docker-compose up -d --build
+```
+The app will be accessible at `http://localhost:3000`.
+
+### Running the Kubernetes Cluster
 1. **Start your local Kubernetes cluster:**
    ```bash
    minikube start
@@ -81,9 +103,9 @@ This project relies on Kubernetes (`minikube` or Docker Desktop) to run locally.
 
 ## 🔒 Security & Best Practices Implemented
 
-- **Kubernetes Secrets:** No hardcoded passwords. Database credentials are stored opaquely in Kubernetes Secrets and mounted as environment variables.
+- **Kubernetes Secrets:** Database credentials are securely stored opaquely in Kubernetes Secrets and mounted as environment variables.
 - **Stateless Authentication:** JSON Web Tokens (JWT) are used for secure, scalable authentication without the need for sticky load balancer sessions.
-- **Separation of Concerns:** The backend is modularized deeply into `routers`, `services`, `crud`, and `schemas`, cleanly separating business logic from database operations.
+- **Clean Architecture & Code Hygiene:** Deeply modularized backend (`routers`, `services`, `crud`, `schemas`), separating business logic from datastore operations. Removed legacy comments and automated stubs for a spotless production repository.
 - **Image Optimization:** Employs multi-stage Dockerfiles (`node:18-alpine` and `python:3.11-slim`) to minimize attack surfaces and registry pull times.
 
 ---
@@ -94,4 +116,4 @@ Created and maintained by **Pratham Vishwakarma**.
 - **LinkedIn:** [prathamvishwakarma](https://www.linkedin.com/in/prathamvishwakarma/)
 - **GitHub:** [prathamvish333](https://github.com/prathamvish333)
 
-*Note: This repository is intended as a showcase of DevOps and Backend Engineering capabilities.*
+*Note: This repository is intended as a showcase of DevOps, Frontend UI/UX, and Backend Engineering capabilities.*

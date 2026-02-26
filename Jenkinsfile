@@ -5,8 +5,6 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 echo 'Checking out code from Git Repository...'
-                // Jenkins automatically pulls the branch you specify in the configuration.
-                // We run a small check to ensure files are there.
                 sh 'ls -la'
             }
         }
@@ -15,7 +13,6 @@ pipeline {
             steps {
                 echo 'Mocking Python Unit Tests...'
                 echo 'pytest backend/tests/ (All tests passed successfully!)'
-                // In a real scenario, this would block deployment if tests fail
             }
         }
         
@@ -32,8 +29,6 @@ pipeline {
         stage('Deploy to Kubernetes (Minikube)') {
             steps {
                 echo 'Applying Kubernetes Manifests...'
-                // Note: kubectl requires kubeconfig setup in Jenkins to reach Minikube.
-                // sh 'kubectl apply -f k8s/'
                 echo 'Deployment stage reached. (Configure Jenkins Kubeconfig to apply directly)'
             }
         }

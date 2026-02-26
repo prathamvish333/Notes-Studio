@@ -5,7 +5,6 @@ from .database import Base, engine
 from . import models  # noqa: F401
 from .routers import auth, notes
 
-# Create database tables on startup (for small demo apps).
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Notes API", version="1.0.0")

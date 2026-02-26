@@ -19,9 +19,6 @@ def list_notes(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    """
-    List all notes belonging to the authenticated user.
-    """
     return note_service.list_notes_for_user(db, current_user)
 
 
@@ -35,9 +32,6 @@ def create_note(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    """
-    Create a new note for the authenticated user.
-    """
     return note_service.create_note_for_user(db, current_user, note_in)
 
 
@@ -50,9 +44,6 @@ def get_note(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    """
-    Retrieve a single note belonging to the authenticated user.
-    """
     return note_service.get_note_for_user_or_404(db, note_id, current_user)
 
 
@@ -66,9 +57,6 @@ def update_note(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    """
-    Update an existing note for the authenticated user.
-    """
     return note_service.update_note_for_user(db, current_user, note_id, note_in)
 
 
@@ -81,9 +69,6 @@ def delete_note(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    """
-    Delete a note belonging to the authenticated user.
-    """
     note_service.delete_note_for_user(db, current_user, note_id)
     return None
 
