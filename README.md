@@ -1,27 +1,4 @@
-# Notes Studio
 
-**Notes Studio** is a production-grade, full-stack application designed to showcase modern backend architecture, container orchestration, and seamless frontend integrations. Built by Pratham Vishwakarma, this project demonstrates real-world software engineering practices, prioritizing scalability, security, and maintainability. It features a unique, interactive Window OS-like portfolio interface.
-
----
-
-## 📸 App Screenshots
-
-### 1. Interactive Portfolio Login (Window OS UI)
-![Login & Portfolio View](./docs/screenshots/login.png)
-
-### 2. User Registration
-![Signup View](./docs/screenshots/signup.png)
-
-### 3. Main Window OS Dashboard
-![Dashboard View](./docs/screenshots/dashboard.png)
-
-### 4. Notes Application
-![Notes App](./docs/screenshots/notes.png)
-
-### 5. Hacker Type Application
-![Hacker Type App](./docs/screenshots/hackertype.png)
-
-### 6. Prometheus Service Monitoring
 <div align="center">
   <img src="docs/screenshots/dashboard.png" alt="Notes Studio OS" width="800"/>
   <h1>Notes Studio OS 🖥️</h1>
@@ -34,7 +11,21 @@
 
 Originally conceived as a simple note-taking application, it has evolved into a complete Microservices Architecture showcasing Kubernetes deployments, persistent storage, API documentation, and a fully integrated CI/CD and Monitoring stack.
 
-## 🚀 Key Features
+## � Interface Showcase
+
+### 1. Interactive Portfolio Login
+![Login View](./docs/screenshots/login.png)
+
+### 2. Main Window OS Dashboard
+![Dashboard View](./docs/screenshots/dashboard.png)
+
+### 3. Core Notes Application
+![Notes App](./docs/screenshots/notes.png)
+
+### 4. Hacker Terminal System Preferences
+![Hacker Type App](./docs/screenshots/hackertype.png)
+
+## �🚀 Key Features
 
 *   **Interactive Web OS**: A fully draggable, window-managed React frontend simulating a Linux terminal environment.
 *   **Kubernetes Native**: Zero-downtime deployment capabilities using Minikube.
