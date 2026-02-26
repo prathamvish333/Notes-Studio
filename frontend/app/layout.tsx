@@ -24,8 +24,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const handleCloseClick = () => {
-    // If we're an app running over the dashboard, go back to dashboard.
-    // If we're already on dashboard, closing implies logout (going to login).
     if (pathname === '/dashboard') {
       window.localStorage.removeItem('token');
       router.push('/login');

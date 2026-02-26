@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 import Taskbar from '../../components/Taskbar';
 
-// Define the desktop apps structure
 interface AppIcon {
     id: string;
     name: string;
@@ -56,7 +55,7 @@ export default function Dashboard() {
             <div
                 ref={constraintsRef}
                 className="h-[calc(100vh-40px)] p-4 flex flex-col flex-wrap items-start justify-start gap-x-8 gap-y-6 content-start"
-                onClick={() => setSelectedIcon(null)} // Deselect when clicking empty space
+                onClick={() => setSelectedIcon(null)}
             >
                 {DESKTOP_APPS.map((app) => (
                     <motion.div

@@ -41,7 +41,6 @@ export default function LoginPage() {
   };
 
   if (showBoot) {
-    // We import BootSequence dynamically inside the file or at top
     const BootSequence = require('../../components/BootSequence').default;
     return (
       <BootSequence onComplete={() => router.push('/dashboard')}>
