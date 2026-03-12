@@ -15,4 +15,5 @@ RUN cp -r .next/static .next/standalone/.next/static
 EXPOSE 3000
 
 WORKDIR /app/.next/standalone
+ENV HOSTNAME="0.0.0.0"
 CMD ["node", "server.js"]
