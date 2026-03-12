@@ -4,7 +4,7 @@ metadata:
   name: notes-frontend-service
   namespace: notes-app
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: notes-frontend
   ports:
