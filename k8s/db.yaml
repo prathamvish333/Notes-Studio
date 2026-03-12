@@ -25,7 +25,7 @@ spec:
               mountPath: /var/lib/postgresql/data
       containers:
         - name: database
-          image: postgres:latest
+          image: postgres:15-alpine
           ports:
             - containerPort: 5432
           env:
