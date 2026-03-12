@@ -13,6 +13,16 @@ spec:
       labels:
         app: notes-db
     spec:
+      initContainers:
+        - name: take-data-dir-ownership
+          image: alpine:latest
+          command:
+            - "sh"
+            - "-c"
+            - "chown -R 999:999 /var/lib/postgresql/data"
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
       containers:
         - name: database
           image: postgres:latest
