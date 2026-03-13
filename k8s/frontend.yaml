@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: prathamvish333/notes-frontend:v35-fix-exception
+          image: prathamvish333/notes-frontend:v36-final-naming
           imagePullPolicy: Always
           ports:
             - containerPort: 3000

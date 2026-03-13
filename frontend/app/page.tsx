@@ -72,7 +72,7 @@ export default function ParallaxPortfolio() {
              animate={{ opacity: 1, y: 0 }}
              className="mb-6 font-mono text-xs tracking-[0.5em] text-emerald-400 uppercase"
           >
-            Senior Systems & DevOps Engineer
+            Backend and DevOps Engineer
           </motion.p>
           
           <motion.h1 
