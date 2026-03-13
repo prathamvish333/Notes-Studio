@@ -20,26 +20,36 @@ const DEVOPS_LOGS = [
 export default function TerminalSection() {
   const [logs, setLogs] = useState<typeof DEVOPS_LOGS>([]);
   const [input, setInput] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const logIndexRef = useRef(0); // To keep track of the current log index
 
   useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < DEVOPS_LOGS.length) {
-        setLogs(prev => [...prev, DEVOPS_LOGS[i]]);
-        i++;
+    setIsMounted(true);
+
+    const updateStats = () => {
+      if (logIndexRef.current < DEVOPS_LOGS.length) {
+        setLogs(prev => [...prev, DEVOPS_LOGS[logIndexRef.current]]);
+        logIndexRef.current++;
       } else {
-        clearInterval(interval);
+        clearInterval(interval); // Clear interval once all logs are displayed
       }
-    }, 800);
+    };
+
+    // Call once immediately to show the first log
+    updateStats();
+    const interval = setInterval(updateStats, 800);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [isMounted]); // Dependency array changed to [isMounted]
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [logs]);
+
+  if (!isMounted) return null; // Mount guard
 
   return (
     <div className="w-full max-w-4xl mx-auto px-6 py-20">
@@ -84,15 +94,15 @@ export default function TerminalSection() {
             >
               <span className="shrink-0 text-gray-700">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
               <span className={
-                log.type === 'success' ? 'text-emerald-400' :
-                log.type === 'warning' ? 'text-amber-400' :
-                log.type === 'process' ? 'text-cyan-400' :
+                log?.type === 'success' ? 'text-emerald-400' :
+                log?.type === 'warning' ? 'text-amber-400' :
+                log?.type === 'process' ? 'text-cyan-400' :
                 'text-gray-400'
               }>
-                {log.type === 'process' && '⟳ '}
-                {log.type === 'success' && '✓ '}
-                {log.type === 'warning' && '⚠ '}
-                {log.text}
+                {log?.type === 'process' && '⟳ '}
+                {log?.type === 'success' && '✓ '}
+                {log?.type === 'warning' && '⚠ '}
+                {log?.text}
               </span>
             </motion.div>
           ))}

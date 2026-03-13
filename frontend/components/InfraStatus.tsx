@@ -12,8 +12,10 @@ const containers = [
 
 export default function InfraStatus() {
   const [stats, setStats] = useState<Record<string, { cpu: string; mem: string; status: string }>>({});
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     const updateStats = () => {
       const newStats: any = {};
       containers.forEach(c => {
@@ -31,6 +33,8 @@ export default function InfraStatus() {
     const interval = setInterval(updateStats, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  if (!isMounted) return null;
 
   return (
     <div className="w-full max-w-4xl mx-auto px-6 py-20">
