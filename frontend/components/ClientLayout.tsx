@@ -54,7 +54,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
   }, [pathname, router]);
 
   const handleCloseClick = () => {
-    router.push('/desktop');
+    router.push('/');
   };
 
   const [isWindowMode, setIsWindowMode] = useState(false);
@@ -74,7 +74,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
 
   if (isRecursive) return null; // Prevent windows inside windows
 
-  const showTopPanel = pathname !== '/' && pathname !== '/login' && pathname !== '/signup' && !isWindowMode;
+  const showTopPanel = pathname !== '/' && pathname !== '/desktop' && pathname !== '/login' && pathname !== '/signup' && !isWindowMode;
 
   return (
     <OSProvider>
