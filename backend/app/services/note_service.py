@@ -3,14 +3,14 @@ from sqlalchemy.orm import Session
 from .. import crud, models, schemas
 
 
-DEFAULT_NOTE_TITLE = "Welcome to Notes Studio"
-DEFAULT_NOTE_CONTENT = """Welcome to Notes Studio.
+DEFAULT_NOTE_TITLE = "Welcome to Pratham's OS"
+DEFAULT_NOTE_CONTENT = """Welcome to Pratham's OS.
 
-Notes Studio is a production-style application designed to reflect how modern backend systems are structured, secured, and maintained. Rather than serving as a basic CRUD demonstration, this project emphasizes clean API design, robust data integrity, and practical software engineering patterns utilized in scalable architectures.
+Pratham's OS is a production-style application designed to reflect how modern backend systems are structured, secured, and maintained. Rather than serving as a basic CRUD demonstration, this project emphasizes clean API design, robust data integrity, and practical software engineering patterns utilized in scalable architectures.
 
 🔹 Project Overview
 
-Notes Studio is built using:
+Pratham's OS is built using:
 
 • FastAPI for high-performance API development
 • PostgreSQL for persistent data storage
@@ -49,7 +49,7 @@ https://www.linkedin.com/in/prathamvishwakarma/
 GitHub:
 https://github.com/prathamvish333
 
-Thank you for exploring Notes Studio."""
+Thank you for exploring Pratham's OS."""
 
 
 def create_default_note_for_user(db: Session, user: models.User) -> models.Note:

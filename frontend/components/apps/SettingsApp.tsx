@@ -2,9 +2,9 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { useSoundEffects } from '../../../hooks/useSoundEffects';
+import { useSoundEffects } from '../../hooks/useSoundEffects';
 
-export default function SystemPreferences() {
+export default function SettingsApp() {
     const { playBlip } = useSoundEffects();
     const [wallpaper, setWallpaper] = useState('hacker');
 
@@ -22,22 +22,18 @@ export default function SystemPreferences() {
     };
 
     return (
-        <div className="flex h-[calc(100vh-100px)] w-full flex-col">
+        <div className="flex h-full w-full flex-col p-6 sm:p-10 bg-black/50 overflow-y-auto custom-scrollbar">
             <div className="mb-8 flex items-end justify-between border-b border-terminal-green/30 pb-4">
                 <div>
-                    <h1 className="font-mono text-3xl font-bold text-terminal-green">~/system_pref</h1>
-                    <p className="mt-1 font-mono text-xs text-terminal-muted">Personalize Your Desktop Experience</p>
+                    <h1 className="font-mono text-xl sm:text-3xl font-bold text-terminal-green">~/system_pref</h1>
+                    <p className="mt-1 font-mono text-[10px] sm:text-xs text-terminal-muted lowercase tracking-tighter">Personalize Your Desktop Experience</p>
                 </div>
             </div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col gap-8 overflow-y-auto pb-10 pr-2 custom-scrollbar"
-            >
+            <div className="flex flex-col gap-8 pb-10">
                 {/* Wallpapers Section */}
-                <div className="border border-terminal-dim bg-terminal-board/40 p-6 rounded-lg">
-                    <h3 className="font-mono text-lg text-terminal-green mb-4 border-b border-terminal-dim pb-2">// WALLPAPER_THEME</h3>
+                <div className="border border-terminal-dim bg-terminal-board/40 p-6 rounded-lg shadow-inner">
+                    <h3 className="font-mono text-sm sm:text-lg text-terminal-green mb-4 border-b border-terminal-dim pb-2 uppercase tracking-widest font-bold">// DYNAMIC_WALLPAPERS</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
@@ -50,13 +46,9 @@ export default function SystemPreferences() {
                                 }`}
                         >
                             <div className="w-full h-24 bg-black rounded shadow-inner flex items-center justify-center overflow-hidden border border-gray-800">
-                                <span className="font-mono text-terminal-green text-[8px] leading-[8px] opacity-70 break-all p-1">
-                                    01001000 01100001 01100011 01101011 01100101 01110010
-                                    01001000 01100001 01100011 01101011 01100101 01110010
-                                    01001000 01100001 01100011 01101011 01100101 01110010
-                                </span>
+                                <div className="w-full h-full bg-cover bg-center opacity-50" style={{ backgroundImage: 'url("/brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png")' }}></div>
                             </div>
-                            <span className="font-mono text-sm text-gray-300">Terminal Hacker</span>
+                            <span className="font-mono text-xs text-gray-300 uppercase font-bold tracking-widest text-center">3D Pratham_Hacker</span>
                         </div>
 
                         {/* DevOps Blue Theme */}
@@ -67,13 +59,10 @@ export default function SystemPreferences() {
                                 : 'border-terminal-dim bg-black/40 hover:bg-black/60 hover:border-terminal-dim/80'
                                 }`}
                         >
-                            <div className="w-full h-24 bg-gradient-to-br from-blue-900 to-black rounded shadow-inner flex items-center justify-center border border-gray-800 relative overflow-hidden">
-                                {/* Abstract blocks representing containers */}
-                                <div className="absolute top-2 left-2 w-4 h-4 bg-blue-500/50 rounded-sm"></div>
-                                <div className="absolute top-8 left-10 w-6 h-6 bg-blue-400/30 rounded-sm"></div>
-                                <div className="absolute bottom-4 right-6 w-8 h-4 bg-blue-600/40 rounded-sm"></div>
+                            <div className="w-full h-24 bg-black rounded shadow-inner flex items-center justify-center overflow-hidden border border-gray-800">
+                                <div className="w-full h-full bg-cover bg-center opacity-50" style={{ backgroundImage: 'url("/brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_devops_3d_pratham_1773350252453.png")' }}></div>
                             </div>
-                            <span className="font-mono text-sm text-gray-300">DevOps Deep Blue</span>
+                            <span className="font-mono text-xs text-gray-300 uppercase font-bold tracking-widest text-center">3D Pratham_DevOps</span>
                         </div>
 
                         {/* Clean Dark Theme */}
@@ -84,21 +73,20 @@ export default function SystemPreferences() {
                                 : 'border-terminal-dim bg-black/40 hover:bg-black/60 hover:border-terminal-dim/80'
                                 }`}
                         >
-                            <div className="w-full h-24 bg-[#0a0a0a] rounded shadow-inner flex items-center justify-center border border-gray-800">
-                                <span className="font-mono text-gray-600 text-xs shadow-none">/* No signal */</span>
+                            <div className="w-full h-24 bg-[#050505] rounded shadow-inner flex items-center justify-center border border-gray-800">
+                                <span className="font-mono text-gray-700 text-[10px] uppercase">/* MINIMAL_VOID */</span>
                             </div>
-                            <span className="font-mono text-sm text-gray-300">Clean Dark</span>
+                            <span className="font-mono text-xs text-gray-300 uppercase font-bold tracking-widest text-center">Clean Void</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Additional Settings placeholders */}
-                <div className="border border-terminal-dim bg-terminal-board/40 p-6 rounded-lg opacity-50">
-                    <h3 className="font-mono text-lg text-terminal-green mb-4 border-b border-terminal-dim pb-2">// NETWORK_CONF</h3>
-                    <p className="font-mono text-sm text-gray-400">Settings managed by cluster administrator. Edit locked.</p>
+                <div className="border border-terminal-dim bg-terminal-board/40 p-6 rounded-lg opacity-40">
+                    <h3 className="font-mono text-sm sm:text-lg text-terminal-green mb-4 border-b border-terminal-dim pb-2 uppercase tracking-widest font-bold">// NETWORK_CONF</h3>
+                    <p className="font-mono text-xs text-gray-500 uppercase tracking-widest">Distributed node configuration managed by Kubernetes master. System lock active.</p>
                 </div>
-
-            </motion.div>
+            </div>
         </div>
     );
 }

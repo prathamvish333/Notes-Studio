@@ -25,3 +25,11 @@ def signup(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
 def login(login_in: schemas.UserLogin, db: Session = Depends(get_db)):
     return auth_service.login_user(db, login_in)
 
+
+@router.post(
+    "/guest-login",
+    response_model=schemas.AuthResponse,
+)
+def guest_login(db: Session = Depends(get_db)):
+    return auth_service.get_or_create_guest_user(db)
+

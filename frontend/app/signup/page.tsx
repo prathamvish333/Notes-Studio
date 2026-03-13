@@ -5,8 +5,9 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+import { getApiBaseUrl } from '../../lib/config';
+
+const API_BASE_URL = getApiBaseUrl();
 
 export default function SignupPage() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function SignupPage() {
       const data = res.data;
       window.localStorage.setItem('token', data.access_token);
       window.localStorage.setItem('user', JSON.stringify(data.user));
-      router.push('/');
+      router.push('/desktop');
     } catch (err: any) {
       const message =
         err.response?.data?.detail ||

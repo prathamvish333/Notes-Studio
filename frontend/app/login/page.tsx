@@ -1,21 +1,34 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, Suspense, useEffect } from 'react';
 import axios from 'axios';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
+import BootSequence from '../../components/BootSequence';
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+import { getApiBaseUrl } from '../../lib/config';
 
-export default function LoginPage() {
+const API_BASE_URL = getApiBaseUrl();
+
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [redirectTo, setRedirectTo] = useState('/desktop');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showBoot, setShowBoot] = useState(false);
   const { playBlip, playType } = useSoundEffects();
+
+  // Capture redirect on first mount to ensure it's not lost
+  useEffect(() => {
+    const param = searchParams.get('redirect');
+    if (param) {
+      console.log(`DEBUG: Capturing redirect destination: ${param}`);
+      setRedirectTo(param);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,9 +54,11 @@ export default function LoginPage() {
   };
 
   if (showBoot) {
-    const BootSequence = require('../../components/BootSequence').default;
     return (
-      <BootSequence onComplete={() => router.push('/dashboard')}>
+      <BootSequence onComplete={() => {
+        console.log(`DEBUG: Boot complete, executing final redirect to: ${redirectTo}`);
+        router.push(redirectTo);
+      }}>
         <div />
       </BootSequence>
     );
@@ -157,6 +172,14 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center font-mono text-terminal-green">LOADING_AUTH_SYSTEM...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
 

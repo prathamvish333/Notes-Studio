@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 
-const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+import { getApiBaseUrl } from '../../lib/config';
+
+const API_BASE_URL = getApiBaseUrl();
 
 type Note = {
     id: number;
@@ -16,7 +17,7 @@ type Note = {
     updated_at: string;
 };
 
-export default function NotesDirectory() {
+export default function NotesDirectory({ standalone = false }: { standalone?: boolean }) {
     const router = useRouter();
     const [notes, setNotes] = useState<Note[]>([]);
     const [loading, setLoading] = useState(true);
@@ -26,8 +27,11 @@ export default function NotesDirectory() {
     const token = typeof window !== 'undefined' ? window.localStorage.getItem('token') : null;
 
     useEffect(() => {
-        if (!token) {
-            router.push('/login');
+        const searchParams = new URLSearchParams(window.location.search);
+        const isActuallyStandalone = standalone || searchParams.get('window') === 'true';
+
+        if (!token && !isActuallyStandalone) {
+            router.push('/login?redirect=/notes');
             return;
         }
         loadNotes();
@@ -43,6 +47,11 @@ export default function NotesDirectory() {
             });
             setNotes(res.data);
         } catch (err: any) {
+            if (err.response?.status === 401) {
+                window.localStorage.removeItem('token');
+                router.push('/login?redirect=/notes');
+                return;
+            }
             setError(err.response?.data?.detail || 'Failed to load directory.');
         } finally {
             setLoading(false);
@@ -72,7 +81,7 @@ export default function NotesDirectory() {
     };
 
     return (
-        <div className="flex h-[calc(100vh-100px)] w-full flex-col">
+        <div className={`flex w-full flex-col ${standalone ? 'h-full p-4' : 'h-[calc(100vh-100px)] p-6 bg-black/40 backdrop-blur-md rounded-2xl border border-terminal-green/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]'}`}>
             <div className="mb-8 flex items-end justify-between border-b border-terminal-green/30 pb-4">
                 <div>
                     <h1 className="font-mono text-3xl font-bold text-terminal-green">~/notes</h1>

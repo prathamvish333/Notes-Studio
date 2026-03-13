@@ -5,11 +5,15 @@
   <p><i>A Containerized, Full-Stack OS Simulation built for the Cloud-Native Era</i></p>
 </div>
 
+## 🌐 Live Production
+**Interface**: [prathamvishwakarma.com](https://prathamvishwakarma.com)  
+**Backend API**: [api.prathamvishwakarma.com](https://api.prathamvishwakarma.com/docs)
+
 ---
 
-**Notes Studio OS** is a highly interactive, simulated Web Desktop environment engineered to showcase modern DevOps practices, scalable backend architectures, and robust container orchestration.
+**Notes Studio OS** is an advanced, simulated Web Desktop environment engineered to showcase production-ready **DevOps practices**, **scalable backend architectures**, and **robust container orchestration**.
 
-Originally conceived as a simple note-taking application, it has evolved into a complete Microservices Architecture showcasing Kubernetes deployments, persistent storage, API documentation, and a fully integrated CI/CD and Monitoring stack.
+What began as a simple note-taking tool has evolved into a complete **Microservices Architecture**—leveraging Kubernetes for resilient deployments, PostgreSQL for persistent state, and a fully integrated CI/CD and Observability stack.
 
 ## � Interface Showcase
 
@@ -27,12 +31,11 @@ Originally conceived as a simple note-taking application, it has evolved into a 
 
 ## �🚀 Key Features
 
-*   **Interactive Web OS**: A fully draggable, window-managed React frontend simulating a Linux terminal environment.
-*   **Kubernetes Native**: Zero-downtime deployment capabilities using Minikube.
-*   **Persistent Storage**: Kubernetes `PersistentVolumeClaim` integration for PostgreSQL, ensuring data safety across pod restarts.
-*   **Automated CI/CD**: Jenkins integrated directly into the stack for pipeline automation.
-*   **Live Observability**: Real-time metrics and dashboards powered by Prometheus and Grafana.
-*   **Secure API Design**: FastAPI backend equipped with Swagger UI and robust JWT authentication routing.
+*   **Interactive Web OS**: A fully draggable, window-managed React frontend simulating a terminal-driven Linux environment.
+*   **3-Tier Backend Architecture**: High-performance **FastAPI** backend with **PostgreSQL**, featuring secure **JWT authentication** and strict Pydantic data validation.
+*   **Kubernetes Orchestration**: Cloud-native deployment using **K8s** with **Persistent Volumes (PVC)** for data durability and **Secrets** for secure credential management.
+*   **Live Observability**: Real-time infrastructure and application metrics powered by a **Prometheus** and **Grafana** monitoring stack.
+*   **Automated CI/CD**: Full automation via **Jenkins**, enabling consistent builds and simulating production-grade zero-downtime deployments.
 
 ---
 

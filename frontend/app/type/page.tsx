@@ -14,7 +14,7 @@ const HACKER_TEXTS = [
     "const [data, setData] = useState(null); useEffect(() => { fetchData() }, []);"
 ];
 
-export default function HackerType() {
+export default function HackerType({ standalone = false }: { standalone?: boolean }) {
     const router = useRouter();
     const { playType, playBlip } = useSoundEffects();
 
@@ -27,10 +27,16 @@ export default function HackerType() {
 
     const inputRef = useRef<HTMLInputElement>(null);
 
+    const [isStandalone, setIsStandalone] = useState(standalone);
+
     useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.get('window') === 'true') {
+            setIsStandalone(true);
+        }
         resetGame();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [standalone]);
 
     const resetGame = () => {
         const randomText = HACKER_TEXTS[Math.floor(Math.random() * HACKER_TEXTS.length)];
@@ -112,13 +118,15 @@ export default function HackerType() {
     };
 
     return (
-        <div className="flex h-[calc(100vh-100px)] w-full flex-col items-center justify-center p-8 relative">
-            <button
-                onClick={() => { playBlip(); router.push('/dashboard'); }}
-                className="absolute top-0 left-0 flex items-center text-terminal-muted hover:text-terminal-green transition font-mono text-xs"
-            >
-                &lt; cd ~/dashboard
-            </button>
+        <div className={`flex w-full flex-col items-center justify-center relative ${isStandalone ? 'h-full p-4' : 'h-[calc(100vh-100px)] p-8'}`}>
+            {!isStandalone && (
+                <button
+                    onClick={() => { playBlip(); router.push('/desktop'); }}
+                    className="absolute top-0 left-0 flex items-center text-terminal-muted hover:text-terminal-green transition font-mono text-xs"
+                >
+                    &lt; cd ~/
+                </button>
+            )}
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}

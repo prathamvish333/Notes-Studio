@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 
@@ -39,7 +39,22 @@ export default function BootSequence({ children, onComplete, mode = 'boot' }: { 
 
     const bootLogs = getLogs();
 
+    const hasRun = useRef(false);
+
     useEffect(() => {
+        if (hasRun.current) return;
+        
+        // Only skip boot check if we are in 'boot' mode
+        if (mode === 'boot') {
+            const hasBooted = window.sessionStorage.getItem('system_booted');
+            if (hasBooted) {
+                setBooting(false);
+                if (onComplete) onComplete();
+                return;
+            }
+        }
+
+        hasRun.current = true;
         // Play boot startup sound once on mount
         playBoot();
 
@@ -51,6 +66,7 @@ export default function BootSequence({ children, onComplete, mode = 'boot' }: { 
 
             if (currentIndex >= bootLogs.length) {
                 clearInterval(interval);
+                window.sessionStorage.setItem('system_booted', 'true');
                 setTimeout(() => {
                     setBooting(false);
                     if (onComplete) onComplete();
@@ -78,7 +94,7 @@ export default function BootSequence({ children, onComplete, mode = 'boot' }: { 
                                 animate={{ opacity: 1 }}
                                 className="mb-8 text-4xl font-bold tracking-widest text-terminal-cyan"
                             >
-                                NOTES_STUDIO OS v2.0
+                                PRATHAM'S OS v3.0
                             </motion.div>
 
                             <div className="flex w-full flex-col space-y-2 text-sm">

@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: prathamvish333/notes-frontend:latest
+          image: prathamvish333/notes-frontend:v33-portfolio
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
           env:
-            - name: NEXT_PUBLIC_API_URL
-              value: "http://localhost:8000"
+            - name: NEXT_PUBLIC_API_BASE_URL
+              value: "https://api.prathamvishwakarma.com"

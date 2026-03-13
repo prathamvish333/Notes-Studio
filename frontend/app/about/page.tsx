@@ -20,8 +20,8 @@ export default function AboutSystem() {
                 {/* Logo / Graphic Side */}
                 <div className="flex flex-col items-center justify-center p-8 border border-terminal-dim bg-terminal-board/40 rounded-lg min-w-[250px]">
                     <div className="text-8xl mb-4 text-terminal-cyan animate-pulse">🖥️</div>
-                    <h2 className="font-mono text-xl font-bold text-terminal-green">Pratham_OS</h2>
-                    <p className="font-mono text-xs text-gray-500 mt-2">v 1.0.0 (Build 8904)</p>
+                    <h2 className="font-mono text-xl font-bold text-terminal-green">Pratham's OS</h2>
+                    <p className="font-mono text-xs text-gray-500 mt-2">v3.0.0 (Stable)</p>
                     <div className="mt-4 px-3 py-1 bg-terminal-green/10 text-terminal-green text-[10px] rounded border border-terminal-green/30 cursor-default">
                         STATUS: ONLINE
                     </div>
@@ -73,7 +73,7 @@ export default function AboutSystem() {
                     </div>
 
                     <div className="text-xs font-mono text-gray-500 text-center mt-4">
-                        Notes Studio is a production-grade application designed to showcase modern backend architecture and seamless frontend integrations.
+                        Pratham's OS is a production-grade application designed to showcase modern backend architecture and seamless frontend integrations.
                     </div>
                 </div>
             </motion.div>

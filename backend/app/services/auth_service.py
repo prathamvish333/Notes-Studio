@@ -37,3 +37,21 @@ def login_user(db: Session, login_in: schemas.UserLogin) -> schemas.AuthResponse
     access_token = create_access_token({"user_id": user.id, "email": user.email})
     return schemas.AuthResponse(access_token=access_token, user=user)
 
+
+def get_or_create_guest_user(db: Session) -> schemas.AuthResponse:
+    guest_email = "guest@notes-studio.com"
+    guest_password = "guest_password_secure_123"
+    
+    user = crud.get_user_by_email(db, email=guest_email)
+    if not user:
+        user_in = schemas.UserCreate(
+            email=guest_email,
+            password=guest_password,
+            full_name="Guest Account"
+        )
+        user = crud.create_user(db, user_in=user_in)
+        create_default_note_for_user(db, user)
+    
+    access_token = create_access_token({"user_id": user.id, "email": user.email})
+    return schemas.AuthResponse(access_token=access_token, user=user)
+

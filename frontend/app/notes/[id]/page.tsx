@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSoundEffects } from '../../../hooks/useSoundEffects';
 
-const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+import { getApiBaseUrl } from '../../../lib/config';
+
+const API_BASE_URL = getApiBaseUrl();
 
 export default function NoteEditor() {
     const router = useRouter();
@@ -25,7 +26,7 @@ export default function NoteEditor() {
 
     useEffect(() => {
         if (!token) {
-            router.push('/login');
+            router.push(`/login?redirect=/notes/${noteId}`);
             return;
         }
         if (noteId) {
@@ -44,6 +45,11 @@ export default function NoteEditor() {
             setDraftTitle(res.data.title);
             setDraftContent(res.data.content);
         } catch (err: any) {
+            if (err.response?.status === 401) {
+                window.localStorage.removeItem('token');
+                router.push(`/login?redirect=/notes/${noteId}`);
+                return;
+            }
             setError(err.response?.data?.detail || 'Failed to load file content.');
         } finally {
             setLoading(false);
@@ -102,7 +108,7 @@ export default function NoteEditor() {
         <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="terminal-panel flex h-[calc(100vh-100px)] w-full flex-col relative"
+            className="terminal-panel flex h-[calc(100vh-100px)] w-full flex-col relative bg-black/40 backdrop-blur-md rounded-2xl border border-terminal-green/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] overflow-hidden"
         >
             {/* Editor Header */}
             <div className="flex items-center justify-between border-b border-terminal-green/30 bg-terminal-dim/50 px-6 py-4">
