@@ -15,21 +15,39 @@ body {
 }
 
 @layer components {
+  /* Stacked Sticky Layout */
   .sticky-section {
-    @apply sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden;
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    @apply sticky top-0 h-screen w-full overflow-hidden;
   }
 
+  /* Curtain Reveal Animation */
   .curtain-reveal {
-    @apply absolute inset-0 bg-black z-[50];
+    @apply relative translate-y-[100%] transition-transform duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)];
   }
 
+  /* Kinetic Typography - Responsive Scaled */
   .kinetic-text {
-    @apply font-heading font-black tracking-tighter leading-[0.85] select-none;
-    -webkit-text-stroke: 1px rgba(255,255,255,0.1);
+    @apply font-heading font-black leading-[0.85] tracking-[-0.05em] uppercase pointer-events-none select-none;
+    font-size: clamp(3rem, 15vw, 15rem);
     color: transparent;
     background-clip: text;
     -webkit-background-clip: text;
+  }
+
+  .kinetic-text-outline {
+    @apply text-transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+  }
+
+  /* Mobile Safe Offsets */
+  @media (max-width: 768px) {
+    .sticky-section {
+      @apply h-[110vh]; /* Extra height to prevent immediate snap on touch */
+    }
+    .kinetic-text {
+      @apply leading-[0.95] tracking-[-0.02em];
+      font-size: clamp(2.5rem, 12vw, 6rem);
+    }
   }
 }
 
