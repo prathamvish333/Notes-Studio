@@ -7,12 +7,30 @@ body {
   height: 100%;
 }
 
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #000000;
-  color: #ffffff;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  body {
+    @apply bg-black text-white antialiased selection:bg-blue-500/30 font-sans;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .sticky-section {
+    @apply sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .curtain-reveal {
+    @apply absolute inset-0 bg-black z-[50];
+  }
+
+  .kinetic-text {
+    @apply font-heading font-black tracking-tighter leading-[0.85] select-none;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.1);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
 }
 
 .font-heading {
@@ -23,9 +41,9 @@ body {
 .vignette {
   position: fixed;
   inset: 0;
-  pointer-events: none;
   background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%);
-  z-index: 50;
+  pointer-events: none;
+  z-index: 40;
 }
 
 /* Custom Scrollbar for Terminal feel */
