@@ -4,25 +4,24 @@ import { motion } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
 
 const DEVOPS_LOGS = [
-  { type: 'info', text: 'Initializing portfolio-cli v3.0.0...' },
-  { type: 'success', text: 'Connection established to pratham-k8s-cluster.' },
-  { type: 'process', text: 'Fetching deployment status for "notes-frontend"...' },
-  { type: 'info', text: 'STATUS: RUNNING | REPLICAS: 3/3' },
-  { type: 'process', text: 'Checking CI/CD pipeline health...' },
-  { type: 'success', text: 'Jenkins Pipeline [JOB_ID: 942] PASSED.' },
-  { type: 'info', text: 'Last deploy: 4 minutes ago by pratham-bot.' },
-  { type: 'process', text: 'Querying database metrics...' },
-  { type: 'info', text: 'PG_ACTIVE_CONNECTIONS: 24 | LATENCY: 12ms' },
-  { type: 'warning', text: 'Cache hit rate at 88% - optimizing Redis eviction policy.' },
-  { type: 'success', text: 'Environment stable. Multi-zone sync complete.' },
+  { type: 'info', text: 'Initializing portfolio-cli v3.6.0...' },
+  { type: 'success', text: 'Connection established to production-cluster-jio.' },
+  { type: 'process', text: 'Fetching architecture state for "Engineering Dashboard"...' },
+  { type: 'info', text: 'STATUS: SCALE_OPTIMIZED | NODES: 12' },
+  { type: 'process', text: 'Validating IAM policies & Security Contexts...' },
+  { type: 'success', text: 'Security Audit: ALL_SYSTEMS_GO.' },
+  { type: 'info', text: 'Automated CI/CD: 1,240 Successful runs in last 30d.' },
+  { type: 'process', text: 'Profiling backend latency (FastAPI)...' },
+  { type: 'info', text: 'P99: 14ms | QPS_CAPACITY: 50k+' },
+  { type: 'warning', text: 'Regional traffic spike detected - scaling AWS ASG...' },
+  { type: 'success', text: 'Horizontal scaling complete. Load balanced.' },
 ];
 
 export default function TerminalSection() {
   const [logs, setLogs] = useState<typeof DEVOPS_LOGS>([]);
-  const [input, setInput] = useState('');
   const [isMounted, setIsMounted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const logIndexRef = useRef(0); // To keep track of the current log index
+  const logIndexRef = useRef(0);
 
   useEffect(() => {
     setIsMounted(true);
@@ -32,16 +31,15 @@ export default function TerminalSection() {
         setLogs(prev => [...prev, DEVOPS_LOGS[logIndexRef.current]]);
         logIndexRef.current++;
       } else {
-        clearInterval(interval); // Clear interval once all logs are displayed
+        clearInterval(interval);
       }
     };
 
-    // Call once immediately to show the first log
     updateStats();
-    const interval = setInterval(updateStats, 800);
+    const interval = setInterval(updateStats, 1200);
 
     return () => clearInterval(interval);
-  }, [isMounted]); // Dependency array changed to [isMounted]
+  }, [isMounted]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -49,74 +47,74 @@ export default function TerminalSection() {
     }
   }, [logs]);
 
-  if (!isMounted) return null; // Mount guard
+  if (!isMounted) return null;
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-6 py-20">
-      <div className="flex items-center gap-4 mb-10">
-        <div className="h-2 w-2 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_10px_rgba(6,182,212,0.8)]" />
-        <h2 className="font-mono text-xs tracking-[0.4em] text-cyan-400/60 uppercase">
-          UI CLI // Interactive Logs
-        </h2>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="relative w-full rounded-2xl border border-white/10 bg-black/40 backdrop-blur-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
+    >
+      {/* Dynamic Glow */}
+      <div className="absolute -top-24 -left-24 h-48 w-48 bg-emerald-500/10 blur-[80px]" />
+      
+      {/* Terminal Header */}
+      <div className="flex items-center justify-between border-b border-white/5 bg-white/[0.03] px-5 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1.5">
+            <div className="h-2.5 w-2.5 rounded-full bg-red-500/40" />
+            <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/40" />
+            <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/40" />
+          </div>
+          <div className="ml-2 font-mono text-[10px] text-gray-400 tracking-wider">
+            bash — <span className="text-emerald-400">system_monitor.sh</span>
+          </div>
+        </div>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        className="relative group rounded-xl border border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl shadow-2xl overflow-hidden"
+      {/* Terminal Body */}
+      <div 
+        ref={scrollRef}
+        className="h-[380px] overflow-y-auto p-8 font-mono text-[11px] leading-relaxed custom-scrollbar selection:bg-emerald-500/40"
       >
-        {/* Terminal Header */}
-        <div className="flex items-center justify-between border-b border-white/5 bg-white/5 px-4 py-3">
-          <div className="flex gap-1.5 font-mono text-[9px] text-gray-500">
-            <span className="text-emerald-500">USER</span>: pratham
-            <span className="mx-2">|</span>
-            <span className="text-cyan-500">HOST</span>: production-vm
-          </div>
-          <div className="flex gap-1.5">
-            <div className="h-2 w-2 rounded-full bg-white/10" />
-            <div className="h-2 w-2 rounded-full bg-white/10" />
-            <div className="h-2 w-2 rounded-full bg-white/10" />
-          </div>
+        {logs.map((log, idx) => (
+          <motion.div 
+            key={idx}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="mb-3 flex gap-4"
+          >
+            <span className="shrink-0 text-gray-600 font-light">
+              [{new Date().toLocaleTimeString([], { hour12: false })}]
+            </span>
+            <span className={
+              log?.type === 'success' ? 'text-emerald-400' :
+              log?.type === 'warning' ? 'text-amber-400' :
+              log?.type === 'process' ? 'text-cyan-400' :
+              'text-white/70'
+            }>
+              {log?.type === 'process' && <span className="inline-block animate-spin mr-2">⟳</span>}
+              {log?.type === 'success' && <span className="mr-2">✓</span>}
+              {log?.type === 'warning' && <span className="mr-2">!</span>}
+              {log?.text}
+            </span>
+          </motion.div>
+        ))}
+        
+        <div className="mt-6 flex items-center gap-2">
+          <span className="text-emerald-500 font-bold">➜</span>
+          <span className="text-cyan-400/80 italic">~/pratham/showcase</span>
+          <motion.div 
+            animate={{ opacity: [1, 0] }}
+            transition={{ repeat: Infinity, duration: 0.8 }}
+            className="h-3.5 w-1.5 bg-emerald-400"
+          />
         </div>
+      </div>
 
-        {/* Terminal Body */}
-        <div 
-          ref={scrollRef}
-          className="h-[320px] overflow-y-auto p-6 font-mono text-[11px] leading-relaxed custom-scrollbar"
-        >
-          {logs.map((log, idx) => (
-            <motion.div 
-              key={idx}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="mb-2 flex gap-3"
-            >
-              <span className="shrink-0 text-gray-700">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
-              <span className={
-                log?.type === 'success' ? 'text-emerald-400' :
-                log?.type === 'warning' ? 'text-amber-400' :
-                log?.type === 'process' ? 'text-cyan-400' :
-                'text-gray-400'
-              }>
-                {log?.type === 'process' && '⟳ '}
-                {log?.type === 'success' && '✓ '}
-                {log?.type === 'warning' && '⚠ '}
-                {log?.text}
-              </span>
-            </motion.div>
-          ))}
-          
-          <div className="mt-4 flex items-center gap-2">
-            <span className="text-emerald-500">➜</span>
-            <span className="text-cyan-400">~/projects/portfolio</span>
-            <span className="text-white animate-pulse">_</span>
-          </div>
-        </div>
-
-        {/* Decorative corner element */}
-        <div className="absolute bottom-0 right-0 h-24 w-24 bg-gradient-to-tl from-emerald-500/5 to-transparent pointer-events-none" />
-      </motion.div>
-    </div>
+      {/* Futuristic Scanline */}
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%)] bg-[size:100%_4px] opacity-20" />
+    </motion.div>
   );
 }
