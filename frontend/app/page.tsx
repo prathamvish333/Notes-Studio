@@ -164,6 +164,7 @@ const skillCategories = [
    ───────────────────────────────────────────── */
 export default function LandingPage() {
   const [isMounted, setIsMounted] = useState(false);
+  const [isRecruiterMode, setIsRecruiterMode] = useState(false);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll();
 
@@ -174,27 +175,46 @@ export default function LandingPage() {
 
   useEffect(() => {
     setIsMounted(true);
-    window.scrollTo(0, 0);
+    // Only scroll to top on fresh mount
+    if (typeof window !== 'undefined' && !window.location.hash) {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   if (!isMounted) return <div className="min-h-screen bg-black" />;
 
   return (
-    <main className="relative bg-black text-white selection:bg-blue-500 selection:text-white overflow-x-hidden">
+    <main className={`relative bg-black text-white selection:bg-blue-500 selection:text-white overflow-x-hidden ${isRecruiterMode ? 'recruiter-view' : ''}`}>
+      
+      {/* Recruiter Mode Toggle */}
+      <div className="fixed top-6 right-6 z-[60] flex items-center gap-3">
+        <span className="font-heading text-[10px] text-gray-500 tracking-widest uppercase font-bold">Recruiter Mode</span>
+        <button 
+          onClick={() => setIsRecruiterMode(!isRecruiterMode)}
+          className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${isRecruiterMode ? 'bg-blue-600' : 'bg-gray-800'}`}
+        >
+          <motion.div 
+            animate={{ x: isRecruiterMode ? 26 : 2 }}
+            className="absolute top-1 w-4 h-4 bg-white rounded-full shadow-md"
+          />
+        </button>
+      </div>
 
       {/* ═══════════════════════════════════════════
           SECTION 01: HERO — IDENTITY
           ═══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative h-screen w-full flex flex-col justify-center px-6 md:px-20 lg:px-32 z-10 overflow-hidden">
-        {/* Parallax Background */}
-        <motion.div className="absolute inset-0 z-0" style={{ y: bgY, scale: bgScale }}>
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 via-black/80 to-black z-10" />
-          <img
-            src="/hero_arch.png"
-            alt=""
-            className="w-full h-full object-cover opacity-25 grayscale"
-          />
-        </motion.div>
+        {/* Parallax Background - Hidden in Recruiter Mode for performance */}
+        {!isRecruiterMode && (
+          <motion.div className="absolute inset-0 z-0" style={{ y: bgY, scale: bgScale }}>
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 via-black/80 to-black z-10" />
+            <img
+              src="/hero_arch.png"
+              alt=""
+              className="w-full h-full object-cover opacity-25 grayscale"
+            />
+          </motion.div>
+        )}
 
         <motion.div
           className="relative z-10 flex flex-col"
@@ -277,7 +297,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════════
           SECTION 02: INFRASTRUCTURE PARALLAX SCROLL
           ═══════════════════════════════════════════ */}
-      <section className="relative z-20">
+      <section className={`relative z-20 ${isRecruiterMode ? 'hidden' : ''}`}>
         <div className="py-16 md:py-24 px-6 md:px-20 lg:px-32">
           <motion.div
             initial={{ opacity: 0 }}

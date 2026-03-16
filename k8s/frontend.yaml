@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: prathamvish333/notes-frontend:v40-responsive-fix
+          image: prathamvish333/notes-frontend:v42-portfolio-upgrade
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
