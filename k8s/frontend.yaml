@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: prathamvish333/notes-frontend:v37-parallax-final
+          image: prathamvish333/notes-frontend:v38-breathtaking-final
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
