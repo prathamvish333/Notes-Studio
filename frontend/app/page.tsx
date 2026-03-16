@@ -1,45 +1,176 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import TerminalSection from '@/components/TerminalSection';
 import InfraStatus from '@/components/InfraStatus';
 
-function StickyCard({ children, index, zIndex, title }: { children: React.ReactNode; index: number; zIndex: number; title?: string }) {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "start start"]
-  });
+/* ─────────────────────────────────────────────
+   ARCHITECTURE DIAGRAM COMPONENT
+   ───────────────────────────────────────────── */
+const archNodes = [
+  { id: 'client', label: 'Client (Next.js)', desc: 'Server-rendered React UI with file-based routing, SSR, and optimized bundle splitting.', tech: 'Next.js 14 • React 18 • TypeScript' },
+  { id: 'api', label: 'FastAPI Backend', desc: 'High-performance async Python API with automatic OpenAPI documentation and request validation.', tech: 'Python 3.11 • FastAPI • Uvicorn • Pydantic' },
+  { id: 'auth', label: 'JWT Authentication', desc: 'Stateless token-based auth with bcrypt password hashing, refresh tokens, and role-based access control.', tech: 'PyJWT • bcrypt • OAuth2' },
+  { id: 'orm', label: 'SQLAlchemy ORM', desc: 'Type-safe database interactions with migration support, relationship mapping, and query optimization.', tech: 'SQLAlchemy 2.0 • Alembic' },
+  { id: 'db', label: 'PostgreSQL Database', desc: 'ACID-compliant relational storage with indexing, connection pooling, and automated backups.', tech: 'PostgreSQL 15 • pgBouncer' },
+];
 
-  const translateY = useTransform(scrollYProgress, [0, 1], ["100%", "0%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 1], [0, 1, 1]);
+function ArchitectureDiagram() {
+  const [activeNode, setActiveNode] = useState<string | null>(null);
 
   return (
-    <div ref={containerRef} className="sticky-section" style={{ zIndex }}>
-      <motion.div 
-        style={{ translateY, scale, opacity }}
-        className="relative h-full w-full bg-black flex flex-col justify-center px-6 md:px-20 lg:px-32 py-20"
-      >
-        {title && (
-          <div className="absolute top-12 md:top-24 left-6 md:left-20 lg:left-32 z-20">
-            <span className="font-heading text-[10px] md:text-[12px] text-blue-500 font-bold tracking-[0.4em] uppercase opacity-60">
-              PRATHAM // {title}
-            </span>
+    <div className="w-full max-w-lg mx-auto lg:mx-0">
+      {archNodes.map((node, i) => (
+        <div key={node.id}>
+          <div
+            className={`arch-node ${activeNode === node.id ? 'active' : ''}`}
+            onClick={() => setActiveNode(activeNode === node.id ? null : node.id)}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="font-heading text-sm md:text-base font-bold text-white">
+                {node.label}
+              </h4>
+              <span className="text-[10px] text-blue-500 font-heading font-bold tracking-wider">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+            </div>
+            {activeNode === node.id && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mt-3 space-y-2"
+              >
+                <p className="text-xs text-gray-400 leading-relaxed">{node.desc}</p>
+                <p className="text-[10px] text-blue-400/60 font-heading font-medium tracking-wider">{node.tech}</p>
+              </motion.div>
+            )}
           </div>
-        )}
-        <div className="relative z-10 w-full h-full flex flex-col justify-center">
-          {children}
+          {i < archNodes.length - 1 && <div className="arch-connector" />}
         </div>
-      </motion.div>
+      ))}
     </div>
   );
 }
 
+/* ─────────────────────────────────────────────
+   INFRASTRUCTURE LAYER COMPONENT
+   ───────────────────────────────────────────── */
+const infraLayers = [
+  {
+    id: 'request',
+    num: '01',
+    title: 'User Request',
+    subtitle: 'Where it all begins',
+    desc: 'Every interaction starts with an HTTP request. Our edge layer handles SSL termination, rate limiting, and geographic routing before the request reaches the application.',
+    skills: ['HTTPS', 'DNS', 'CDN', 'Edge Computing'],
+    color: 'from-blue-500/10 to-transparent',
+  },
+  {
+    id: 'api',
+    num: '02',
+    title: 'API Gateway',
+    subtitle: 'FastAPI Backend Service',
+    desc: 'Async Python API handling request validation, business logic, and response serialization. Auto-generates OpenAPI documentation. Handles 10K+ requests/sec with sub-50ms p99 latency.',
+    skills: ['Python', 'FastAPI', 'REST APIs', 'Pydantic', 'Uvicorn'],
+    color: 'from-indigo-500/10 to-transparent',
+  },
+  {
+    id: 'container',
+    num: '03',
+    title: 'Container Layer',
+    subtitle: 'Docker Isolation',
+    desc: 'Multi-stage Docker builds with minimal base images. Each service runs in an isolated container with defined resource limits, health checks, and restart policies.',
+    skills: ['Docker', 'Multi-stage Builds', 'Alpine Linux', 'Docker Compose'],
+    color: 'from-cyan-500/10 to-transparent',
+  },
+  {
+    id: 'orchestration',
+    num: '04',
+    title: 'Orchestration',
+    subtitle: 'Kubernetes Cluster',
+    desc: 'Declarative infrastructure with automated scaling, rolling deployments, and self-healing. Services communicate via internal DNS with mTLS encryption.',
+    skills: ['Kubernetes', 'Helm', 'Ingress', 'HPA', 'Service Mesh'],
+    color: 'from-purple-500/10 to-transparent',
+  },
+  {
+    id: 'database',
+    num: '05',
+    title: 'Database Layer',
+    subtitle: 'Persistent Storage',
+    desc: 'ACID-compliant PostgreSQL with connection pooling, query optimization, and automated backup schedules. SQLAlchemy ORM provides type-safe data access.',
+    skills: ['PostgreSQL', 'SQLAlchemy', 'Alembic', 'Connection Pooling'],
+    color: 'from-emerald-500/10 to-transparent',
+  },
+  {
+    id: 'monitoring',
+    num: '06',
+    title: 'Observability',
+    subtitle: 'Monitoring & DevOps',
+    desc: 'Full-stack observability with metrics collection, log aggregation, and alerting. CI/CD pipelines automate testing, building, and deployment on every push.',
+    skills: ['Prometheus', 'Grafana', 'Jenkins', 'CI/CD', 'Terraform'],
+    color: 'from-orange-500/10 to-transparent',
+  },
+];
+
+function InfraLayer({ layer, index }: { layer: typeof infraLayers[0]; index: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, amount: 0.3 });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="infra-layer"
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+      transition={{ duration: 0.8 }}
+    >
+      <div className={`absolute inset-0 bg-gradient-to-b ${layer.color} pointer-events-none`} />
+      <div className="infra-layer-content">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <span className="font-heading text-6xl md:text-8xl font-black text-white/5">{layer.num}</span>
+              <div>
+                <h3 className="font-heading text-2xl md:text-4xl font-black text-white tracking-tight">{layer.title}</h3>
+                <p className="font-heading text-xs text-blue-400/60 tracking-[0.3em] uppercase font-bold mt-1">{layer.subtitle}</p>
+              </div>
+            </div>
+            <p className="text-sm md:text-base text-gray-400 leading-relaxed max-w-lg">{layer.desc}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {layer.skills.map(skill => (
+              <span key={skill} className="skill-badge">{skill}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   SKILLS SECTION
+   ───────────────────────────────────────────── */
+const skillCategories = [
+  { title: 'Languages', icon: '⟨/⟩', skills: ['Python', 'Shell', 'JavaScript', 'TypeScript'] },
+  { title: 'Backend', icon: '⚡', skills: ['FastAPI', 'REST APIs', 'SQLAlchemy', 'JWT Auth'] },
+  { title: 'DevOps', icon: '☸', skills: ['Docker', 'Kubernetes', 'Terraform', 'CI/CD', 'Jenkins'] },
+  { title: 'Tools', icon: '⚙', skills: ['Git', 'Linux', 'PostgreSQL', 'Prometheus', 'Grafana'] },
+];
+
+/* ─────────────────────────────────────────────
+   MAIN LANDING PAGE
+   ───────────────────────────────────────────── */
 export default function LandingPage() {
   const [isMounted, setIsMounted] = useState(false);
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+
+  // Parallax transforms for hero background
+  const bgY = useTransform(scrollYProgress, [0, 0.3], ['0%', '30%']);
+  const bgScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.15]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -50,138 +181,295 @@ export default function LandingPage() {
 
   return (
     <main className="relative bg-black text-white selection:bg-blue-500 selection:text-white overflow-x-hidden">
-      
-      {/* SECTION 01: HERO */}
-      <section className="relative h-screen w-full flex flex-col justify-center px-6 md:px-20 lg:px-32 z-10">
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-black to-black" />
-          <motion.img 
-            initial={{ scale: 1.1, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.2 }}
-            transition={{ duration: 3 }}
-            src="file:///Users/pratham/.gemini/antigravity/brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/breathtaking_architecture_abstract_1773665753495.png" 
-            className="w-full h-full object-cover grayscale brightness-50"
-          />
-        </div>
 
-        <div className="relative z-10 flex flex-col">
+      {/* ═══════════════════════════════════════════
+          SECTION 01: HERO — IDENTITY
+          ═══════════════════════════════════════════ */}
+      <section ref={heroRef} className="relative h-screen w-full flex flex-col justify-center px-6 md:px-20 lg:px-32 z-10 overflow-hidden">
+        {/* Parallax Background */}
+        <motion.div className="absolute inset-0 z-0" style={{ y: bgY, scale: bgScale }}>
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 via-black/80 to-black z-10" />
+          <img
+            src="/hero_arch.png"
+            alt=""
+            className="w-full h-full object-cover opacity-25 grayscale"
+          />
+        </motion.div>
+
+        <motion.div
+          className="relative z-10 flex flex-col"
+          style={{ opacity: heroOpacity }}
+        >
+          {/* Name */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
-          >
-            <h1 className="kinetic-text kinetic-text-outline">
-              Pratham<span className="text-blue-500/30">.</span>
-            </h1>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
-            className="mt-[-1vw] md:mt-[-4vw]"
-          >
-            <h1 className="kinetic-text text-white">
-              Vishwakarma
-            </h1>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="mt-8 md:mt-12 flex flex-col md:flex-row md:items-center gap-8 md:gap-16"
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="max-w-md">
-              <p className="font-heading text-xs md:text-sm text-gray-400 leading-relaxed tracking-widest uppercase font-medium">
-                Infrastructure Architect & DevOps specialist. <br />
-                Scaling distributed systems for the next web.
-              </p>
-            </div>
-            <div className="flex gap-8">
-              <Link href="/desktop" className="group flex items-center gap-4 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase">
-                <span className="text-blue-500">→</span>
-                <span className="border-b border-white/20 pb-1 transition-all group-hover:border-blue-500">Launch_OS</span>
-              </Link>
-            </div>
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-9xl font-black text-white leading-[0.9] tracking-tighter">
+              Pratham<br />
+              <span className="text-blue-500">Vishwakarma</span>
+            </h1>
           </motion.div>
-        </div>
+
+          {/* Title & Subtitle */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="mt-6 md:mt-8 space-y-2"
+          >
+            <p className="font-heading text-sm md:text-lg font-bold text-gray-300 tracking-wide">
+              Backend & DevOps Engineer
+            </p>
+            <p className="font-heading text-xs md:text-sm text-gray-500 tracking-widest uppercase font-medium">
+              SDE-1 @ Jio Platforms
+            </p>
+          </motion.div>
+
+          {/* Tech Stack */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="mt-6 flex flex-wrap gap-2"
+          >
+            {['Python', 'FastAPI', 'Docker', 'Kubernetes', 'Automation'].map(tech => (
+              <span key={tech} className="skill-badge text-[10px] md:text-xs">
+                {tech}
+              </span>
+            ))}
+          </motion.div>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mt-8 md:mt-12 flex flex-wrap gap-4"
+          >
+            <a href="#projects" className="px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase transition-all hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]">
+              View Projects
+            </a>
+            <a href="https://github.com/prathamvish333" target="_blank" className="px-6 py-3 border border-white/10 hover:border-white/30 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase text-gray-400 hover:text-white transition-all">
+              GitHub
+            </a>
+            <a href="https://linkedin.com/in/prathamvishwakarma" target="_blank" className="px-6 py-3 border border-white/10 hover:border-white/30 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase text-gray-400 hover:text-white transition-all">
+              LinkedIn
+            </a>
+            <a href="/Prathams_Resume.pdf" download className="px-6 py-3 border border-blue-500/30 hover:border-blue-500/60 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase text-blue-400 hover:text-blue-300 transition-all">
+              ↓ Resume
+            </a>
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+        >
+          <span className="font-heading text-[9px] text-gray-600 tracking-[0.5em] uppercase">Scroll</span>
+          <div className="w-[1px] h-8 bg-gradient-to-b from-white/20 to-transparent" />
+        </motion.div>
       </section>
 
-      {/* SECTION 02: EXPERIENCE */}
-      <StickyCard index={1} zIndex={20} title="CAREER_HISTORY">
-        <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-center h-full">
-          <div className="space-y-8 md:space-y-12">
+      {/* ═══════════════════════════════════════════
+          SECTION 02: INFRASTRUCTURE PARALLAX SCROLL
+          ═══════════════════════════════════════════ */}
+      <section className="relative z-20">
+        <div className="py-16 md:py-24 px-6 md:px-20 lg:px-32">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="max-w-6xl mx-auto mb-8"
+          >
+            <span className="font-heading text-[10px] text-blue-500 tracking-[0.5em] uppercase font-bold">How I Think</span>
+            <h2 className="font-heading text-3xl md:text-6xl font-black text-white tracking-tight mt-3">
+              Infrastructure<br />
+              <span className="text-gray-600">from request to response.</span>
+            </h2>
+          </motion.div>
+        </div>
+
+        {infraLayers.map((layer, i) => (
+          <InfraLayer key={layer.id} layer={layer} index={i} />
+        ))}
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 03: EXPERIENCE — JIO PLATFORMS
+          ═══════════════════════════════════════════ */}
+      <section className="relative z-20 px-6 md:px-20 lg:px-32 py-24 md:py-32">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+          <div className="space-y-8">
             <div>
-              <h2 className="font-heading text-4xl md:text-7xl lg:text-9xl font-black text-white leading-none tracking-tighter">
+              <span className="font-heading text-[10px] text-blue-500 tracking-[0.5em] uppercase font-bold">Experience</span>
+              <h2 className="font-heading text-4xl md:text-7xl font-black text-white leading-none tracking-tighter mt-4">
                 Jio<br/>Platforms<span className="text-blue-500">.</span>
               </h2>
-              <p className="mt-4 md:mt-8 font-heading text-[10px] md:text-[12px] text-gray-400 tracking-[0.4em] uppercase font-bold">
-                Backend & DevOps Engineer // 2023 — PRESENT
+              <p className="mt-4 font-heading text-xs text-gray-400 tracking-[0.3em] uppercase font-bold">
+                SDE-1 • Backend & DevOps Engineer • Dec 2023 — Present
               </p>
             </div>
-            <p className="text-sm md:text-xl text-gray-500 leading-relaxed max-w-xl font-medium">
-              Architecting high-throughput microservices and orchestrating multi-region Kubernetes clusters for India's largest infrastructure.
+            <p className="text-sm md:text-lg text-gray-400 leading-relaxed">
+              Architecting high-throughput microservices and orchestrating multi-region Kubernetes clusters for <span className="text-white font-medium">CloudXP</span> — India&apos;s largest digital infrastructure platform. Leading regional orchestration systems handling millions of daily operations.
             </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl border border-white/5 bg-white/[0.01]">
+                <p className="font-heading text-2xl font-black text-blue-500">99.9%</p>
+                <p className="text-[10px] text-gray-500 font-heading tracking-wider uppercase mt-1">Uptime SLA</p>
+              </div>
+              <div className="p-4 rounded-xl border border-white/5 bg-white/[0.01]">
+                <p className="font-heading text-2xl font-black text-blue-500">&lt;50ms</p>
+                <p className="text-[10px] text-gray-500 font-heading tracking-wider uppercase mt-1">P99 Latency</p>
+              </div>
+            </div>
           </div>
-          <div className="hidden lg:block relative p-12">
-            <img 
-              src="file:///Users/pratham/.gemini/antigravity/brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/devops_blueprint_isometric_1773665771110.png" 
-              className="w-full h-auto grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-1000" 
+          <div className="hidden lg:block">
+            <img
+              src="/systems_arch.png"
+              className="w-full h-auto opacity-60 hover:opacity-100 transition-opacity duration-1000"
               alt="Systems Architecture"
             />
           </div>
         </div>
-      </StickyCard>
+      </section>
 
-      {/* SECTION 03: TELEMETRY */}
-      <StickyCard index={2} zIndex={30} title="LIVE_MONITOR">
-        <div className="space-y-12 md:space-y-20 h-full flex flex-col justify-center">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <h2 className="font-heading text-4xl md:text-6xl lg:text-8xl font-black text-white leading-tight tracking-tighter">
-              System<br />
-              <span className="text-blue-500">Telemetry.</span>
-            </h2>
-            <div className="text-left md:text-right">
-              <p className="text-[10px] md:text-[12px] text-gray-600 font-heading tracking-[0.3em] uppercase font-bold">
-                CLUSTER_HEALTH: 100%
+      {/* ═══════════════════════════════════════════
+          SECTION 04: NOTES STUDIO — PROJECT
+          ═══════════════════════════════════════════ */}
+      <section id="projects" className="relative z-20 px-6 md:px-20 lg:px-32 py-24 md:py-32 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <span className="font-heading text-[10px] text-blue-500 tracking-[0.5em] uppercase font-bold">Flagship Project</span>
+          <h2 className="font-heading text-4xl md:text-7xl font-black text-white leading-[0.85] tracking-tighter mt-4">
+            Notes Studio<span className="text-indigo-500">.</span>
+          </h2>
+          <p className="mt-6 text-sm md:text-lg text-gray-400 leading-relaxed max-w-2xl">
+            A production-grade collaborative note platform. Features real-time sync, JWT authentication, and a full REST API — deployed on Kubernetes with automated CI/CD.
+          </p>
+
+          <div className="mt-12 grid lg:grid-cols-2 gap-16 items-start">
+            {/* Architecture Diagram */}
+            <ArchitectureDiagram />
+
+            {/* Project Details */}
+            <div className="space-y-8">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="p-4 rounded-xl border border-white/5 bg-white/[0.01] text-center">
+                  <p className="font-heading text-lg font-black text-white">REST</p>
+                  <p className="text-[9px] text-gray-500 font-heading tracking-wider uppercase mt-1">API Design</p>
+                </div>
+                <div className="p-4 rounded-xl border border-white/5 bg-white/[0.01] text-center">
+                  <p className="font-heading text-lg font-black text-white">JWT</p>
+                  <p className="text-[9px] text-gray-500 font-heading tracking-wider uppercase mt-1">Auth System</p>
+                </div>
+                <div className="p-4 rounded-xl border border-white/5 bg-white/[0.01] text-center">
+                  <p className="font-heading text-lg font-black text-white">K8s</p>
+                  <p className="text-[9px] text-gray-500 font-heading tracking-wider uppercase mt-1">Deployment</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <Link href="/notes" className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-heading text-xs font-bold tracking-wider uppercase transition-all">
+                  Live Demo →
+                </Link>
+                <a href="https://github.com/prathamvish333/Notes-Studio" target="_blank" className="px-6 py-3 border border-white/10 hover:border-white/30 rounded-xl font-heading text-xs font-bold tracking-wider uppercase text-gray-400 hover:text-white transition-all">
+                  Source Code
+                </a>
+              </div>
+
+              <p className="text-[10px] text-gray-600 font-heading tracking-wider">
+                ⓘ Notes are viewable without login. Authentication required to create or edit.
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 05: INFRASTRUCTURE TELEMETRY
+          ═══════════════════════════════════════════ */}
+      <section className="relative z-20 px-6 md:px-20 lg:px-32 py-24 md:py-32 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+              <span className="font-heading text-[10px] text-blue-500 tracking-[0.5em] uppercase font-bold">Live Status</span>
+              <h2 className="font-heading text-3xl md:text-6xl font-black text-white tracking-tight mt-3">
+                System Telemetry
+              </h2>
+            </div>
+            <p className="text-[10px] text-gray-600 font-heading tracking-[0.3em] uppercase font-bold">
+              Cluster Health: 100%
+            </p>
+          </div>
           <InfraStatus />
         </div>
-      </StickyCard>
+      </section>
 
-      {/* SECTION 04: PROJECT */}
-      <StickyCard index={3} zIndex={40} title="FLAGSHIP_PROJECT">
-        <div className="grid lg:grid-cols-2 gap-12 md:gap-24 items-center h-full">
-          <div className="order-2 lg:order-1">
-             <TerminalSection />
-          </div>
-          <div className="order-1 lg:order-2 space-y-8 md:space-y-12">
-            <h2 className="font-heading text-4xl md:text-7xl lg:text-9xl font-black text-white leading-[0.85] tracking-tighter">
-              Notes<br />Studio<span className="text-indigo-500">.</span>
-            </h2>
-            <p className="text-sm md:text-lg text-gray-500 leading-relaxed font-medium max-w-xl">
-              A full-stack engineered AI collaborative platform. Built with security-first architecture and sub-millisecond sync.
-            </p>
-            <Link href="https://github.com/prathamvish333/Notes-Studio" className="inline-flex items-center gap-6 group">
-              <span className="text-[10px] md:text-xs font-black tracking-[0.5em] uppercase text-white group-hover:text-blue-500 transition-colors">EXPLORE_SOURCE</span>
-              <div className="h-0.5 w-12 bg-white/20 group-hover:w-20 group-hover:bg-blue-500 transition-all duration-500" />
-            </Link>
+      {/* ═══════════════════════════════════════════
+          SECTION 06: SKILLS
+          ═══════════════════════════════════════════ */}
+      <section className="relative z-20 px-6 md:px-20 lg:px-32 py-24 md:py-32 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <span className="font-heading text-[10px] text-blue-500 tracking-[0.5em] uppercase font-bold">Capabilities</span>
+          <h2 className="font-heading text-3xl md:text-6xl font-black text-white tracking-tight mt-3 mb-16">
+            Technical Skills
+          </h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {skillCategories.map(cat => (
+              <div key={cat.title} className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-xl">{cat.icon}</span>
+                  <h3 className="font-heading text-sm font-bold text-white tracking-wider uppercase">{cat.title}</h3>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {cat.skills.map(skill => (
+                    <span key={skill} className="skill-badge text-xs justify-start">{skill}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </StickyCard>
+      </section>
 
-      <footer className="relative z-50 bg-black border-t border-white/5 py-12 md:py-24 px-6 md:px-20 lg:px-32">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-          <div>
-            <h3 className="font-heading text-xl md:text-3xl font-black text-white mb-2">P.V.</h3>
-            <p className="text-[10px] text-gray-800 font-heading tracking-[0.5em] uppercase font-bold">Infrastructure Architect // 2026</p>
+      {/* ═══════════════════════════════════════════
+          SECTION 07: FOOTER
+          ═══════════════════════════════════════════ */}
+      <footer className="relative z-30 bg-black border-t border-white/5 py-16 md:py-24 px-6 md:px-20 lg:px-32">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
+            <div>
+              <h3 className="font-heading text-2xl md:text-4xl font-black text-white">
+                Let&apos;s Build.
+              </h3>
+              <p className="mt-2 text-sm text-gray-500">Open to opportunities in Backend & DevOps Engineering.</p>
+            </div>
+            <div className="flex flex-col md:flex-row gap-6 md:gap-10">
+              <a href="mailto:prathamvishwakarma2000@gmail.com" className="font-heading text-xs font-bold tracking-[0.3em] uppercase text-gray-500 hover:text-blue-400 transition-colors">
+                Email
+              </a>
+              <a href="https://github.com/prathamvish333" target="_blank" className="font-heading text-xs font-bold tracking-[0.3em] uppercase text-gray-500 hover:text-white transition-colors">
+                GitHub
+              </a>
+              <a href="https://linkedin.com/in/prathamvishwakarma" target="_blank" className="font-heading text-xs font-bold tracking-[0.3em] uppercase text-gray-500 hover:text-white transition-colors">
+                LinkedIn
+              </a>
+              <Link href="/engineering" className="font-heading text-xs font-bold tracking-[0.3em] uppercase text-gray-500 hover:text-white transition-colors">
+                Engineering
+              </Link>
+            </div>
           </div>
-          <div className="flex gap-12 font-heading text-[10px] font-bold tracking-[0.4em] uppercase text-gray-600">
-            <Link href="https://github.com/prathamvish333" className="hover:text-white transition-colors">GITHUB</Link>
-            <Link href="https://linkedin.com/in/prathamvishwakarma" className="hover:text-white transition-colors">LINKEDIN</Link>
-            <Link href="mailto:vpkpratham@gmail.com" className="hover:text-white transition-colors">EMAIL</Link>
+          <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="font-heading text-[10px] text-gray-800 tracking-[0.5em] uppercase font-bold">
+              Pratham Vishwakarma © 2026
+            </p>
+            <a href="/Prathams_Resume.pdf" download className="font-heading text-[10px] text-blue-500/50 hover:text-blue-400 tracking-[0.3em] uppercase font-bold transition-colors">
+              Download Resume ↓
+            </a>
           </div>
         </div>
       </footer>

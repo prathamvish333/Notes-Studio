@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
-
 import { getApiBaseUrl } from '../../lib/config';
 
 const API_BASE_URL = getApiBaseUrl();
@@ -25,15 +24,9 @@ export default function NotesDirectory({ standalone = false }: { standalone?: bo
     const { playBlip, playType } = useSoundEffects();
 
     const token = typeof window !== 'undefined' ? window.localStorage.getItem('token') : null;
+    const isLoggedIn = !!token;
 
     useEffect(() => {
-        const searchParams = new URLSearchParams(window.location.search);
-        const isActuallyStandalone = standalone || searchParams.get('window') === 'true';
-
-        if (!token && !isActuallyStandalone) {
-            router.push('/login?redirect=/notes');
-            return;
-        }
         loadNotes();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -42,24 +35,28 @@ export default function NotesDirectory({ standalone = false }: { standalone?: bo
         setLoading(true);
         setError(null);
         try {
-            const res = await axios.get<Note[]>(`${API_BASE_URL}/notes/`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const headers: any = {};
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
+            const res = await axios.get<Note[]>(`${API_BASE_URL}/notes/`, { headers });
             setNotes(res.data);
         } catch (err: any) {
-            if (err.response?.status === 401) {
+            if (err.response?.status === 401 && token) {
                 window.localStorage.removeItem('token');
-                router.push('/login?redirect=/notes');
-                return;
             }
-            setError(err.response?.data?.detail || 'Failed to load directory.');
+            // Still try to show something for public access
+            setError(err.response?.data?.detail || 'Unable to load notes. The API may require authentication.');
         } finally {
             setLoading(false);
         }
     };
 
     const handleCreate = async () => {
-        if (!token) return;
+        if (!isLoggedIn) {
+            router.push('/login?redirect=/notes');
+            return;
+        }
         playBlip();
         setLoading(true);
         try {
@@ -85,16 +82,28 @@ export default function NotesDirectory({ standalone = false }: { standalone?: bo
             <div className="mb-8 flex items-end justify-between border-b border-terminal-green/30 pb-4">
                 <div>
                     <h1 className="font-mono text-3xl font-bold text-terminal-green">~/notes</h1>
-                    <p className="mt-1 font-mono text-xs text-terminal-muted">Access encrypted files ({notes.length} total)</p>
+                    <p className="mt-1 font-mono text-xs text-terminal-muted">
+                        {isLoggedIn
+                            ? `Access encrypted files (${notes.length} total)`
+                            : 'Public read-only mode — login to create or edit notes'
+                        }
+                    </p>
                 </div>
                 <button
                     onClick={handleCreate}
                     disabled={loading}
                     className="flex h-10 items-center gap-2 rounded bg-terminal-green/20 px-6 font-mono text-xs font-bold text-terminal-green border border-terminal-green/50 transition-all hover:bg-terminal-green/40 hover:shadow-terminal-glow disabled:opacity-50"
                 >
-                    <span>touch new_note.txt</span>
+                    <span>{isLoggedIn ? 'touch new_note.txt' : '🔒 Login to Create'}</span>
                 </button>
             </div>
+
+            {/* Public access banner */}
+            {!isLoggedIn && (
+                <div className="mb-4 border-l-2 border-blue-500 bg-blue-500/10 p-3 font-mono text-xs text-blue-400">
+                    ⓘ Authentication required to create or modify notes. Viewing notes is public for demonstration.
+                </div>
+            )}
 
             {error && (
                 <div className="mb-4 border-l-2 border-red-500 bg-red-500/10 p-3 font-mono text-xs text-red-400">
@@ -110,6 +119,14 @@ export default function NotesDirectory({ standalone = false }: { standalone?: bo
                 <div className="flex flex-1 flex-col items-center justify-center font-mono text-terminal-muted opacity-50">
                     <div className="text-6xl mb-4">📭</div>
                     <p>Directory is empty.</p>
+                    {!isLoggedIn && (
+                        <button
+                            onClick={() => router.push('/login?redirect=/notes')}
+                            className="mt-4 text-terminal-green underline text-xs"
+                        >
+                            Login to create the first note
+                        </button>
+                    )}
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-y-auto pb-8 pr-2 custom-scrollbar">

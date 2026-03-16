@@ -6,6 +6,7 @@ import { SoundProvider, useSoundContext } from '../context/SoundContext';
 import { OSProvider, useOS } from '../context/OSContext';
 import AnimatedBackground from '../components/AnimatedBackground';
 import BootSequence from './BootSequence';
+import DevTerminal from './DevTerminal';
 
 function SystemWrapper({ children }: { children: React.ReactNode }) {
   const { systemState, completeBoot } = useOS();
@@ -46,7 +47,8 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Robust navigation guard
     const token = window.localStorage.getItem('token');
-    const isRestrictedPath = pathname.startsWith('/notes') || pathname === '/settings';
+    // Notes are publicly viewable; only settings requires auth
+    const isRestrictedPath = pathname === '/settings';
     
     if (!token && isRestrictedPath) {
       router.push('/login');
@@ -122,6 +124,9 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
 
             {/* Matrix Scanline Effect Overlay */}
             <div className="pointer-events-none fixed inset-0 z-50 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-20"></div>
+
+            {/* Developer Terminal (Ctrl + `) */}
+            <DevTerminal />
           </div>
         </SystemWrapper>
       </SoundProvider>
