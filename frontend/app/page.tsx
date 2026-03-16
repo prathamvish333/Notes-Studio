@@ -268,16 +268,16 @@ export default function LandingPage() {
             transition={{ delay: 0.6 }}
             className="mt-8 md:mt-12 flex flex-wrap gap-4"
           >
-            <a href="#projects" className="px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase transition-all hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]">
+            <Link href="/desktop" className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-xl font-heading text-sm md:text-base font-black tracking-wider uppercase transition-all hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] flex items-center gap-2">
+              <span className="text-xl"></span> Launch Pratham&apos;s OS
+            </Link>
+            <a href="#projects" className="px-6 py-4 border border-white/20 hover:border-white/40 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase transition-all">
               View Projects
             </a>
-            <a href="https://github.com/prathamvish333" target="_blank" className="px-6 py-3 border border-white/10 hover:border-white/30 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase text-gray-400 hover:text-white transition-all">
+            <a href="https://github.com/prathamvish333" target="_blank" className="px-6 py-4 border border-white/10 hover:border-white/30 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase text-gray-400 hover:text-white transition-all">
               GitHub
             </a>
-            <a href="https://linkedin.com/in/prathamvishwakarma" target="_blank" className="px-6 py-3 border border-white/10 hover:border-white/30 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase text-gray-400 hover:text-white transition-all">
-              LinkedIn
-            </a>
-            <a href="/Prathams_Resume.pdf" download className="px-6 py-3 border border-blue-500/30 hover:border-blue-500/60 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase text-blue-400 hover:text-blue-300 transition-all">
+            <a href="/Prathams_Resume.pdf" download className="px-6 py-4 border border-blue-500/30 hover:border-blue-500/60 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase text-blue-400 hover:text-blue-300 transition-all">
               ↓ Resume
             </a>
           </motion.div>

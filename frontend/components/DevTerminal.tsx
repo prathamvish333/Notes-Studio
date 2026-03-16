@@ -13,6 +13,7 @@ const COMMANDS: Record<string, string> = {
   notes      — Open Notes Studio demo
   contact    — Show contact info
   api-status — Check API health
+  os         — Launch Pratham's OS
   clear      — Clear terminal`,
 
   projects: `PROJECTS
@@ -24,6 +25,8 @@ const COMMANDS: Record<string, string> = {
 02  Interactive OS   Virtual desktop environment
     Stack: TypeScript • Framer Motion • Docker
     URL:   https://prathamvishwakarma.com/desktop`,
+
+  os: `Booting Pratham's OS...`,
 
   skills: `SKILLS
 ─────────────────────
@@ -106,6 +109,8 @@ export default function DevTerminal() {
       window.open('https://github.com/prathamvish333', '_blank');
     } else if (cmd === 'notes') {
       window.location.href = '/notes';
+    } else if (cmd === 'os') {
+      window.location.href = '/desktop';
     }
 
     const output = COMMANDS[cmd] || `Command not found: ${cmd}. Type "help" for available commands.`;
