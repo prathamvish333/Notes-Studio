@@ -269,7 +269,7 @@ export default function LandingPage() {
             className="mt-8 md:mt-12 flex flex-wrap gap-4"
           >
             <Link href="/desktop" className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-xl font-heading text-sm md:text-base font-black tracking-wider uppercase transition-all hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] flex items-center gap-2">
-              <span className="text-xl"></span> Launch Pratham&apos;s OS
+              <span className="text-xl font-mono">{'>_'}</span> Launch Pratham&apos;s OS
             </Link>
             <a href="#projects" className="px-6 py-4 border border-white/20 hover:border-white/40 rounded-xl font-heading text-xs md:text-sm font-bold tracking-wider uppercase transition-all">
               View Projects
