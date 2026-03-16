@@ -54,21 +54,18 @@ export default function TerminalSection() {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="relative w-full rounded-2xl border border-white/10 bg-black/40 backdrop-blur-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
+      className="relative w-full rounded-[2rem] border border-white/5 bg-white/[0.01] backdrop-blur-[40px] shadow-[0_40px_100px_rgba(0,0,0,0.4)] overflow-hidden"
     >
-      {/* Dynamic Glow */}
-      <div className="absolute -top-24 -left-24 h-48 w-48 bg-emerald-500/10 blur-[80px]" />
-      
       {/* Terminal Header */}
-      <div className="flex items-center justify-between border-b border-white/5 bg-white/[0.03] px-5 py-4">
-        <div className="flex items-center gap-3">
-          <div className="flex gap-1.5">
-            <div className="h-2.5 w-2.5 rounded-full bg-red-500/40" />
-            <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/40" />
-            <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/40" />
+      <div className="flex items-center justify-between border-b border-white/5 bg-white/[0.02] px-8 py-5">
+        <div className="flex items-center gap-6">
+          <div className="flex gap-2">
+            <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
+            <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
+            <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
           </div>
-          <div className="ml-2 font-mono text-[10px] text-gray-400 tracking-wider">
-            bash — <span className="text-emerald-400">system_monitor.sh</span>
+          <div className="font-heading text-[10px] text-gray-500 tracking-[0.3em] uppercase">
+            system_monitor.sh
           </div>
         </div>
       </div>
@@ -76,45 +73,38 @@ export default function TerminalSection() {
       {/* Terminal Body */}
       <div 
         ref={scrollRef}
-        className="h-[380px] overflow-y-auto p-8 font-mono text-[11px] leading-relaxed custom-scrollbar selection:bg-emerald-500/40"
+        className="h-[420px] overflow-y-auto p-10 font-mono text-[10px] leading-relaxed scrollbar-hide selection:bg-blue-500/20"
       >
         {logs.map((log, idx) => (
           <motion.div 
             key={idx}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            className="mb-3 flex gap-4"
+            className="mb-4 flex gap-6"
           >
-            <span className="shrink-0 text-gray-600 font-light">
-              [{new Date().toLocaleTimeString([], { hour12: false })}]
+            <span className="shrink-0 text-gray-700 font-light">
+              [{new Date().toLocaleTimeString([], { hour12: false, second: '2-digit' })}]
             </span>
             <span className={
-              log?.type === 'success' ? 'text-emerald-400' :
-              log?.type === 'warning' ? 'text-amber-400' :
-              log?.type === 'process' ? 'text-cyan-400' :
-              'text-white/70'
+              log?.type === 'success' ? 'text-blue-400' :
+              log?.type === 'warning' ? 'text-indigo-400' :
+              log?.type === 'process' ? 'text-gray-400' :
+              'text-white/40'
             }>
-              {log?.type === 'process' && <span className="inline-block animate-spin mr-2">⟳</span>}
-              {log?.type === 'success' && <span className="mr-2">✓</span>}
-              {log?.type === 'warning' && <span className="mr-2">!</span>}
               {log?.text}
             </span>
           </motion.div>
         ))}
         
-        <div className="mt-6 flex items-center gap-2">
-          <span className="text-emerald-500 font-bold">➜</span>
-          <span className="text-cyan-400/80 italic">~/pratham/showcase</span>
+        <div className="mt-8 flex items-center gap-4">
+          <span className="text-blue-500 font-bold tracking-tighter">❯</span>
           <motion.div 
             animate={{ opacity: [1, 0] }}
-            transition={{ repeat: Infinity, duration: 0.8 }}
-            className="h-3.5 w-1.5 bg-emerald-400"
+            transition={{ repeat: Infinity, duration: 1 }}
+            className="h-3 w-1 bg-blue-500/50"
           />
         </div>
       </div>
-
-      {/* Futuristic Scanline */}
-      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%)] bg-[size:100%_4px] opacity-20" />
     </motion.div>
   );
 }

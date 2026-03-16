@@ -46,6 +46,44 @@ export default function AnimatedBackground() {
 
     if (!mounted) return null;
 
+    if (theme === 'breathtaking') {
+        return (
+            <div className="fixed inset-0 -z-10 overflow-hidden bg-black">
+                {/* Master Vignette for Depth */}
+                <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)] pointer-events-none" />
+                
+                {/* Moving Atmospheric Blobs */}
+                <motion.div
+                    animate={{
+                        x: [0, 100, -50, 0],
+                        y: [0, -50, 80, 0],
+                        scale: [1, 1.2, 0.9, 1],
+                    }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-1/4 -left-20 h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[120px]"
+                />
+                
+                <motion.div
+                    animate={{
+                        x: [0, -80, 40, 0],
+                        y: [0, 100, -20, 0],
+                        scale: [0.8, 1, 0.85, 0.8],
+                    }}
+                    transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                    className="absolute bottom-1/4 -right-20 h-[600px] w-[600px] rounded-full bg-indigo-600/10 blur-[150px]"
+                />
+
+                <motion.div
+                    animate={{
+                        opacity: [0.05, 0.1, 0.05],
+                    }}
+                    transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] pointer-events-none"
+                />
+            </div>
+        );
+    }
+
     if (theme === 'clean') {
         return <div className="fixed inset-0 -z-10 bg-[#0a0a0a]"></div>;
     }
