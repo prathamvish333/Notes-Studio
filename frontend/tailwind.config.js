@@ -5,15 +5,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: '#050505',
-        surface: '#0a0a0a',
+        background: '#0b1120',
+        surface: '#111827',
+        'surface-card': '#1e293b',
         terminal: {
-          green: '#00ff41',
-          cyan: '#00ffff',
-          board: '#111111',
-          dim: '#1a1a1a',
-          text: '#e0e0e0',
-          muted: '#808080'
+          green: '#0d9488', // Replaced with Teal Primary
+          teal: '#0d9488',
+          'teal-hover': '#14b8a6',
+          'teal-glow': '#2dd4bf',
+          'teal-muted': '#134e4a',
+          board: '#0b1120',
+          dim: '#111827',
+          text: '#e5e7eb',
+          muted: '#9ca3af'
         }
       },
       animation: {
@@ -27,8 +31,9 @@ module.exports = {
         }
       },
       boxShadow: {
-        'terminal-glow': '0 0 15px rgba(0, 255, 65, 0.05)',
-        'terminal-glow-hover': '0 0 10px rgba(0, 255, 65, 0.2)',
+        'terminal-glow': '0 0 15px rgba(13, 148, 136, 0.1)',
+        'terminal-glow-hover': '0 0 20px rgba(20, 184, 166, 0.3)',
+        'teal-glow': '0 0 20px rgba(13, 148, 136, 0.2)',
       }
     },
   },

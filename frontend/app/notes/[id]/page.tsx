@@ -23,12 +23,9 @@ export default function NoteEditor() {
     const { playBlip, playType } = useSoundEffects();
 
     const token = typeof window !== 'undefined' ? window.localStorage.getItem('token') : null;
+    const isReadOnly = !token;
 
     useEffect(() => {
-        if (!token) {
-            router.push(`/login?redirect=/notes/${noteId}`);
-            return;
-        }
         if (noteId) {
             loadNote();
         }
@@ -39,13 +36,15 @@ export default function NoteEditor() {
         setLoading(true);
         setError(null);
         try {
-            const res = await axios.get(`${API_BASE_URL}/notes/${noteId}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const headers: any = {};
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
+            const res = await axios.get(`${API_BASE_URL}/notes/${noteId}`, { headers });
             setDraftTitle(res.data.title);
             setDraftContent(res.data.content);
         } catch (err: any) {
-            if (err.response?.status === 401) {
+            if (err.response?.status === 401 && token) {
                 window.localStorage.removeItem('token');
                 router.push(`/login?redirect=/notes/${noteId}`);
                 return;
@@ -57,7 +56,7 @@ export default function NoteEditor() {
     };
 
     const handleSave = async () => {
-        if (!token || !noteId) return;
+        if (isReadOnly || !noteId) return;
         playBlip();
         setSaving(true);
         setError(null);
@@ -76,7 +75,7 @@ export default function NoteEditor() {
     };
 
     const handleDelete = async () => {
-        if (!token || !noteId) return;
+        if (isReadOnly || !noteId) return;
         playBlip();
         setSaving(true);
         setError(null);
@@ -123,37 +122,63 @@ export default function NoteEditor() {
                         type="text"
                         placeholder="filename.md"
                         value={draftTitle}
-                        onChange={(e) => { playType(); setDraftTitle(e.target.value); }}
-                        className="w-full bg-transparent font-mono text-xl font-bold text-terminal-cyan outline-none placeholder:text-terminal-muted/50"
+                        readOnly={isReadOnly}
+                        onChange={(e) => { 
+                            if (isReadOnly) return;
+                            playType(); 
+                            setDraftTitle(e.target.value); 
+                        }}
+                        className={`w-full bg-transparent font-mono text-xl font-bold text-terminal-cyan outline-none placeholder:text-terminal-muted/50 ${isReadOnly ? 'cursor-default' : ''}`}
                     />
                 </div>
 
                 <div className="flex gap-3">
-                    <button
-                        onClick={handleDelete}
-                        disabled={saving}
-                        className="rounded border border-red-500/30 px-4 py-2 font-mono text-xs text-red-400 transition hover:bg-red-500/10 hover:shadow-[0_0_10px_rgba(239,68,68,0.2)] disabled:opacity-50"
-                    >
-                        rm -rf
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="rounded bg-terminal-green px-6 py-2 font-mono text-xs font-bold text-background transition hover:bg-[#00cc33] hover:shadow-terminal-glow disabled:opacity-70"
-                    >
-                        {saving ? 'saving...' : ':wq'}
-                    </button>
+                    {!isReadOnly && (
+                        <>
+                            <button
+                                onClick={handleDelete}
+                                disabled={saving}
+                                className="rounded border border-red-500/30 px-4 py-2 font-mono text-xs text-red-400 transition hover:bg-red-500/10 hover:shadow-[0_0_10px_rgba(239,68,68,0.2)] disabled:opacity-50"
+                            >
+                                rm -rf
+                            </button>
+                            <button
+                                onClick={handleSave}
+                                disabled={saving}
+                                className="rounded bg-terminal-green px-6 py-2 font-mono text-xs font-bold text-background transition hover:bg-[#00cc33] hover:shadow-terminal-glow disabled:opacity-70"
+                            >
+                                {saving ? 'saving...' : ':wq'}
+                            </button>
+                        </>
+                    )}
+                    {isReadOnly && (
+                        <button
+                            onClick={() => router.push('/login')}
+                            className="rounded bg-blue-600 px-6 py-2 font-mono text-xs font-bold text-white transition hover:bg-blue-500"
+                        >
+                            Login to Edit
+                        </button>
+                    )}
                 </div>
             </div>
+
+            {/* Read-only Banner */}
+            {isReadOnly && (
+                <div className="bg-blue-500/10 px-8 py-2 border-b border-blue-500/20 font-mono text-[10px] text-blue-400 flex items-center gap-2">
+                    <span className="animate-pulse">●</span> READ-ONLY MODE — View access granted for demonstration purposes.
+                </div>
+            )}
 
             <textarea
                 placeholder="// type your commands here..."
                 value={draftContent}
+                readOnly={isReadOnly}
                 onChange={(e) => {
+                    if (isReadOnly) return;
                     playType();
                     setDraftContent(e.target.value);
                 }}
-                className="h-full w-full resize-none bg-transparent p-8 font-mono text-base leading-relaxed text-terminal-text outline-none placeholder:text-terminal-muted custom-scrollbar"
+                className={`h-full w-full resize-none bg-transparent p-8 font-mono text-base leading-relaxed text-terminal-text outline-none placeholder:text-terminal-muted custom-scrollbar ${isReadOnly ? 'cursor-default opacity-80' : ''}`}
             />
 
             {error && (

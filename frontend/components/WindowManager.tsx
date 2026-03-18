@@ -31,7 +31,6 @@ export default function WindowManager({ windows, onClose, onMinimize, onFocus, o
                         key={win.id}
                         drag
                         dragMomentum={false}
-                        dragHandleClassName="window-header"
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ 
                             opacity: 1, 
@@ -45,30 +44,30 @@ export default function WindowManager({ windows, onClose, onMinimize, onFocus, o
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         onClick={() => onFocus(win.id)}
                         style={{ zIndex: win.zIndex }}
-                        className={`fixed flex flex-col overflow-hidden rounded-lg border border-terminal-green/40 bg-black/60 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] backdrop-blur-2xl ${win.isMaximized ? 'rounded-none' : ''}`}
+                        className={`fixed flex flex-col overflow-hidden rounded-lg border border-terminal-teal/40 bg-[#0b1120]/60 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] backdrop-blur-2xl ${win.isMaximized ? 'rounded-none' : ''}`}
                     >
                         {/* Window Header */}
-                        <div className="window-header flex h-9 items-center justify-between border-b border-terminal-green/20 bg-terminal-green/5 px-3 cursor-move active:cursor-grabbing select-none">
+                        <div className="window-header flex h-9 items-center justify-between border-b border-terminal-teal/20 bg-terminal-teal/5 px-3 cursor-move active:cursor-grabbing select-none">
                             <div className="flex items-center gap-2">
                                 <span className="text-sm">{win.icon}</span>
-                                <span className="font-mono text-[11px] font-bold text-terminal-green uppercase tracking-widest">{win.title}</span>
+                                <span className="font-mono text-[11px] font-bold text-terminal-teal uppercase tracking-widest">{win.title}</span>
                             </div>
                             
                             <div className="flex items-center gap-1.5">
                                 {/* Minimize */}
                                 <button 
                                     onClick={(e) => { e.stopPropagation(); onMinimize(win.id); }}
-                                    className="group flex h-5 w-5 items-center justify-center rounded-sm bg-terminal-dim/30 hover:bg-terminal-cyan/20 transition-colors"
+                                    className="group flex h-5 w-5 items-center justify-center rounded-sm bg-[#134e4a]/30 hover:bg-[#14b8a6]/20 transition-colors"
                                 >
-                                    <div className="h-[2px] w-2 bg-terminal-muted group-hover:bg-terminal-cyan" />
+                                    <div className="h-[2px] w-2 bg-[#9ca3af] group-hover:bg-[#14b8a6]" />
                                 </button>
                                 
                                 {/* Maximize */}
                                 <button 
                                     onClick={(e) => { e.stopPropagation(); onToggleMaximize(win.id); }}
-                                    className="group flex h-5 w-5 items-center justify-center rounded-sm bg-terminal-dim/30 hover:bg-terminal-green/20 transition-colors"
+                                    className="group flex h-5 w-5 items-center justify-center rounded-sm bg-[#134e4a]/30 hover:bg-[#0d9488]/20 transition-colors"
                                 >
-                                    <div className={`border-[1.5px] border-terminal-muted group-hover:border-terminal-green ${win.isMaximized ? 'h-2 w-2' : 'h-2.5 w-2.5'}`} />
+                                    <div className={`border-[1.5px] border-[#9ca3af] group-hover:border-[#0d9488] ${win.isMaximized ? 'h-2 w-2' : 'h-2.5 w-2.5'}`} />
                                 </button>
                                 
                                 {/* Close */}

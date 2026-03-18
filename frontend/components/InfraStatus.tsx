@@ -4,9 +4,9 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 const containers = [
-  { id: 'frontend', name: 'Frontend', port: 3000, color: 'text-blue-400', tier: 'WEB_LAYER' },
-  { id: 'backend', name: 'Backend API', port: 8000, color: 'text-indigo-400', tier: 'LOGIC_LAYER' },
-  { id: 'database', name: 'Database', port: 5432, color: 'text-cyan-400', tier: 'DATA_LAYER' },
+  { id: 'frontend', name: 'Frontend', port: 3000, color: 'text-[#2dd4bf]', tier: 'WEB_LAYER' },
+  { id: 'backend', name: 'Backend API', port: 8000, color: 'text-[#0d9488]', tier: 'LOGIC_LAYER' },
+  { id: 'database', name: 'Database', port: 5432, color: 'text-[#14b8a6]', tier: 'DATA_LAYER' },
 ];
 
 export default function InfraStatus() {
@@ -43,7 +43,7 @@ export default function InfraStatus() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-6 md:p-8 backdrop-blur-sm transition-all hover:border-blue-500/20"
+            className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-6 md:p-8 backdrop-blur-sm transition-all hover:border-teal-500/20"
           >
             <div className="absolute top-4 right-4">
                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -61,11 +61,11 @@ export default function InfraStatus() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-[9px] font-heading tracking-wider uppercase font-bold">
                   <span className="text-gray-500">CPU</span>
-                  <span className="text-blue-400">{stats[c.id]?.cpu || '0.2%'}</span>
+                  <span className="text-teal-400">{stats[c.id]?.cpu || '0.2%'}</span>
                 </div>
                 <div className="w-full h-[2px] bg-white/5 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-blue-500/60"
+                    className="h-full bg-teal-500/60"
                     animate={{ width: stats[c.id]?.cpu || '20%' }}
                   />
                 </div>
@@ -75,11 +75,11 @@ export default function InfraStatus() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-[9px] font-heading tracking-wider uppercase font-bold">
                   <span className="text-gray-500">Memory</span>
-                  <span className="text-indigo-400">{stats[c.id]?.mem || '140MB'}</span>
+                  <span className="text-teal-500">{stats[c.id]?.mem || '140MB'}</span>
                 </div>
                 <div className="w-full h-[2px] bg-white/5 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-indigo-500/60"
+                    className="h-full bg-teal-600/60"
                     animate={{ width: '45%' }}
                   />
                 </div>
@@ -89,11 +89,11 @@ export default function InfraStatus() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-[9px] font-heading tracking-wider uppercase font-bold">
                   <span className="text-gray-500">Latency</span>
-                  <span className="text-emerald-400">{stats[c.id]?.net || '2ms'}</span>
+                  <span className="text-teal-400">{stats[c.id]?.net || '2ms'}</span>
                 </div>
                 <div className="w-full h-[2px] bg-white/5 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-emerald-500/60"
+                    className="h-full bg-teal-500/60"
                     animate={{ width: '15%' }}
                   />
                 </div>
@@ -101,7 +101,7 @@ export default function InfraStatus() {
             </div>
 
             <div className="mt-6 flex items-center justify-between">
-              <span className="font-heading text-[9px] text-emerald-500/60 tracking-wider font-bold uppercase">● Online</span>
+              <span className="font-heading text-[9px] text-[#2dd4bf]/60 tracking-wider font-bold uppercase">● Online</span>
             </div>
           </motion.div>
         ))}

@@ -30,7 +30,8 @@ export default function Taskbar({ windows = [], onFocus }: TaskbarProps) {
             const timer = setTimeout(() => {
                 window.localStorage.removeItem('token');
                 window.sessionStorage.removeItem('system_booted');
-                router.push('/login');
+                window.sessionStorage.removeItem('os_booted'); // Reset boot state on shutdown
+                window.location.href = 'https://prathamvishwakarma.com';
             }, 3000);
             return () => clearTimeout(timer);
         } else if (systemState === 'restarting') {

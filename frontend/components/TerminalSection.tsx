@@ -75,7 +75,7 @@ export default function TerminalSection() {
       {/* Terminal Body */}
       <div 
         ref={scrollRef}
-        className="h-[480px] overflow-y-auto p-12 font-mono text-[11px] leading-relaxed scrollbar-hide selection:bg-blue-500/20"
+        className="h-[480px] overflow-y-auto p-12 font-mono text-[11px] leading-relaxed scrollbar-hide selection:bg-teal-500/20"
       >
         {logs.map((log, idx) => (
           <motion.div 
@@ -88,10 +88,10 @@ export default function TerminalSection() {
               [{new Date().toLocaleTimeString([], { hour12: false, second: '2-digit' })}]
             </span>
             <span className={
-              log?.type === 'success' ? 'text-blue-400' :
-              log?.type === 'warning' ? 'text-indigo-400' :
-              log?.type === 'process' ? 'text-gray-400' :
-              'text-white/30'
+              log?.type === 'success' ? 'text-terminal-teal' :
+              log?.type === 'warning' ? 'text-[#14b8a6]' :
+              log?.type === 'process' ? 'text-[#9ca3af]' :
+              'text-[#e5e7eb]/30'
             }>
               {log?.text}
             </span>
@@ -99,11 +99,11 @@ export default function TerminalSection() {
         ))}
         
         <div className="mt-12 flex items-center gap-4">
-          <span className="text-blue-500 font-bold tracking-tighter">❯</span>
+          <span className="text-terminal-teal font-bold tracking-tighter">❯</span>
           <motion.div 
             animate={{ opacity: [1, 0] }}
             transition={{ repeat: Infinity, duration: 1 }}
-            className="h-4 w-1 bg-blue-500/50"
+            className="h-4 w-1 bg-terminal-teal/50"
           />
         </div>
       </div>

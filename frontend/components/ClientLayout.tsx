@@ -3,29 +3,10 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { SoundProvider, useSoundContext } from '../context/SoundContext';
-import { OSProvider, useOS } from '../context/OSContext';
+import { useOS } from '../context/OSContext';
 import AnimatedBackground from '../components/AnimatedBackground';
 import BootSequence from './BootSequence';
 import DevTerminal from './DevTerminal';
-
-function SystemWrapper({ children }: { children: React.ReactNode }) {
-  const { systemState, completeBoot } = useOS();
-  const [bootMode, setBootMode] = useState<'boot' | 'shutdown' | 'restart'>('boot');
-
-  useEffect(() => {
-    if (systemState === 'shutting_down') setBootMode('shutdown');
-    if (systemState === 'restarting') setBootMode('restart');
-  }, [systemState]);
-
-  return (
-    <BootSequence 
-      mode={bootMode} 
-      onComplete={completeBoot}
-    >
-      {children}
-    </BootSequence>
-  );
-}
 
 function VolumeToggle() {
   const { isMuted, toggleMute } = useSoundContext();
@@ -41,6 +22,7 @@ function VolumeToggle() {
 }
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
+  const { isRecruiterMode } = useOS();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -76,60 +58,58 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
 
   if (isRecursive) return null; // Prevent windows inside windows
 
-  const showTopPanel = pathname !== '/' && pathname !== '/desktop' && pathname !== '/login' && pathname !== '/signup' && !isWindowMode;
+  const showTopPanel = pathname !== '/' && pathname !== '/desktop' && pathname !== '/login' && pathname !== '/signup' && pathname !== '/prathams-os' && pathname !== '/engineering' && !isWindowMode;
 
   return (
-    <OSProvider>
-      <SoundProvider>
-        <SystemWrapper>
-          {!isWindowMode && <AnimatedBackground />}
+    <>
+      {!isWindowMode && <AnimatedBackground isRecruiterMode={isRecruiterMode} />}
 
-          <div className={`flex min-h-screen flex-col ${isWindowMode ? 'bg-black/40 backdrop-blur-md' : 'bg-transparent'}`}>
-            {/* Top Panel / Terminal Header */}
-            {showTopPanel && (
-              <header className="fixed top-0 z-50 flex w-full items-center justify-between border-b border-terminal-green/20 bg-terminal-board/80 px-6 py-3 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  {/* Linux Terminal Dots */}
-                  <div className="flex gap-1.5 group">
-                    <div
-                      onClick={handleCloseClick}
-                      className="h-3 w-3 rounded-full bg-red-500/80 shadow-[0_0_5px_rgba(239,68,68,0.5)] cursor-pointer hover:bg-red-500 flex items-center justify-center transition-all"
-                    >
-                      <span className="text-[8px] text-black opacity-0 group-hover:opacity-100 leading-none pb-[1px]">x</span>
-                    </div>
-                    <div className="h-3 w-3 rounded-full bg-yellow-500/80 shadow-[0_0_5px_rgba(234,179,8,0.5)]"></div>
-                    <div className="h-3 w-3 rounded-full bg-terminal-green/80 shadow-[0_0_5px_rgba(0,255,65,0.5)]"></div>
+        <div className={`flex min-h-screen flex-col ${isWindowMode ? 'bg-black/40 backdrop-blur-md' : 'bg-transparent'}`}>
+          {/* Top Panel / Terminal Header */}
+          {showTopPanel && (
+            <header className="fixed top-0 z-50 flex w-full items-center justify-between border-b border-terminal-green/20 bg-terminal-board/80 px-6 py-3 backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                {/* Linux Terminal Dots */}
+                <div className="flex gap-1.5 group">
+                  <div
+                    onClick={handleCloseClick}
+                    className="h-3 w-3 rounded-full bg-red-500/80 shadow-[0_0_5px_rgba(239,68,68,0.5)] cursor-pointer hover:bg-red-500 flex items-center justify-center transition-all"
+                  >
+                    <span className="text-[8px] text-black opacity-0 group-hover:opacity-100 leading-none pb-[1px]">x</span>
                   </div>
-
-                  <div className="ml-4 flex items-baseline gap-2 font-mono">
-                    <span className="text-sm font-bold tracking-tight text-terminal-green">notes-studio</span>
-                    <span className="text-xs text-terminal-muted">~/projects/pratham</span>
-                  </div>
+                  <div className="h-3 w-3 rounded-full bg-yellow-500/80 shadow-[0_0_5px_rgba(234,179,8,0.5)]"></div>
+                  <div className="h-3 w-3 rounded-full bg-terminal-green/80 shadow-[0_0_5px_rgba(0,255,65,0.5)]"></div>
                 </div>
 
-                {/* Header Actions */}
-                <div className="flex items-center gap-4">
-                  <VolumeToggle />
-                  <div className="font-mono text-xs text-terminal-green">
-                    [SECURE_CONNECTION_ESTABLISHED]
-                  </div>
+                <div className="ml-4 flex items-baseline gap-2 font-mono">
+                  <span className="text-sm font-bold tracking-tight text-terminal-green">notes-studio</span>
+                  <span className="text-xs text-terminal-muted">~/projects/pratham</span>
                 </div>
-              </header>
-            )}
+              </div>
 
-            {/* Main Content Area */}
-            <main className={`flex-1 ${showTopPanel ? 'pt-14' : ''}`}>
-              {children}
-            </main>
+              {/* Header Actions */}
+              <div className="flex items-center gap-4">
+                <VolumeToggle />
+                <div className="font-mono text-xs text-terminal-green">
+                  [SECURE_CONNECTION_ESTABLISHED]
+                </div>
+              </div>
+            </header>
+          )}
 
-            {/* Matrix Scanline Effect Overlay */}
+          {/* Main Content Area */}
+          <main className={`flex-1 ${showTopPanel ? 'pt-14' : ''}`}>
+            {children}
+          </main>
+
+          {/* Matrix Scanline Effect Overlay (Disabled in Recruiter Mode) */}
+          {!isRecruiterMode && (
             <div className="pointer-events-none fixed inset-0 z-50 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-20"></div>
+          )}
 
-            {/* Developer Terminal (Ctrl + `) */}
-            <DevTerminal />
-          </div>
-        </SystemWrapper>
-      </SoundProvider>
-    </OSProvider>
+          {/* Developer Terminal (Disabled in Recruiter Mode) */}
+          {!isRecruiterMode && <DevTerminal />}
+      </div>
+    </>
   );
 }

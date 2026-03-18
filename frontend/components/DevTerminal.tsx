@@ -24,13 +24,13 @@ const COMMANDS: Record<string, string> = {
 
 02  Interactive OS   Virtual desktop environment
     Stack: TypeScript • Framer Motion • Docker
-    URL:   https://prathamvishwakarma.com/desktop`,
+    URL:   https://prathamvishwakarma.com/prathams-os`,
 
   os: `Booting Pratham's OS...`,
 
   skills: `SKILLS
 ─────────────────────
-Languages   Python, Shell, JavaScript, TypeScript
+Languages   Python, Shell, TypeScript
 Backend     FastAPI, REST APIs, SQLAlchemy, JWT
 DevOps      Docker, Kubernetes, Terraform, CI/CD, Jenkins
 Tools       Git, Linux, PostgreSQL, Prometheus, Grafana`,
@@ -110,7 +110,7 @@ export default function DevTerminal() {
     } else if (cmd === 'notes') {
       window.location.href = '/notes';
     } else if (cmd === 'os') {
-      window.location.href = '/desktop';
+      window.location.href = '/prathams-os';
     }
 
     const output = COMMANDS[cmd] || `Command not found: ${cmd}. Type "help" for available commands.`;
@@ -150,8 +150,8 @@ export default function DevTerminal() {
               {history.map((entry, i) => (
                 <div key={i} className="mb-4">
                   <div className="flex gap-2">
-                    <span className="text-blue-500 shrink-0">❯</span>
-                    <span className="text-white">{entry.input}</span>
+                    <span className="text-terminal-teal shrink-0">❯</span>
+                    <span className="text-[#e5e7eb]">{entry.input}</span>
                   </div>
                   <pre className="mt-1 ml-4 text-gray-400 whitespace-pre-wrap leading-relaxed">{entry.output}</pre>
                 </div>
@@ -159,12 +159,12 @@ export default function DevTerminal() {
 
               {/* Input */}
               <form onSubmit={handleSubmit} className="flex gap-2 items-center">
-                <span className="text-blue-500 shrink-0">❯</span>
+                <span className="text-terminal-teal shrink-0">❯</span>
                 <input
                   ref={inputRef}
                   value={input}
                   onChange={e => setInput(e.target.value)}
-                  className="flex-1 bg-transparent outline-none text-white caret-blue-500"
+                  className="flex-1 bg-transparent outline-none text-[#e5e7eb] caret-terminal-teal"
                   placeholder="type a command..."
                   autoFocus
                 />

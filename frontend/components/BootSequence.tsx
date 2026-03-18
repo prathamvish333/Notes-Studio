@@ -46,7 +46,7 @@ export default function BootSequence({ children, onComplete, mode = 'boot' }: { 
         
         // Only skip boot check if we are in 'boot' mode
         if (mode === 'boot') {
-            const hasBooted = window.sessionStorage.getItem('system_booted');
+            const hasBooted = window.sessionStorage.getItem('os_booted');
             if (hasBooted) {
                 setBooting(false);
                 if (onComplete) onComplete();
@@ -66,7 +66,7 @@ export default function BootSequence({ children, onComplete, mode = 'boot' }: { 
 
             if (currentIndex >= bootLogs.length) {
                 clearInterval(interval);
-                window.sessionStorage.setItem('system_booted', 'true');
+                window.sessionStorage.setItem('os_booted', 'true');
                 setTimeout(() => {
                     setBooting(false);
                     if (onComplete) onComplete();
@@ -86,15 +86,15 @@ export default function BootSequence({ children, onComplete, mode = 'boot' }: { 
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
                         transition={{ duration: 0.8, ease: "easeInOut" }}
-                        className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background font-mono text-terminal-green"
+                        className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0b1120] font-mono text-terminal-teal"
                     >
                         <div className="flex w-full max-w-2xl flex-col items-start px-8">
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className="mb-8 text-4xl font-bold tracking-widest text-terminal-cyan"
+                                className="mb-8 text-4xl font-bold tracking-widest text-[#0d9488]"
                             >
-                                PRATHAM'S OS v3.0
+                                PRATHAM&apos;S OS v4.0
                             </motion.div>
 
                             <div className="flex w-full flex-col space-y-2 text-sm">
@@ -103,7 +103,7 @@ export default function BootSequence({ children, onComplete, mode = 'boot' }: { 
                                         key={i}
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        className={`${i === bootLogs.length - 1 ? 'mt-4 text-terminal-cyan font-bold scale-105 origin-left' : ''}`}
+                                        className={`${i === bootLogs.length - 1 ? 'mt-4 text-[#0d9488] font-bold scale-105 origin-left' : ''}`}
                                     >
                                         <span className="mr-4 opacity-50">[{new Date().toISOString().split('T')[1].substring(0, 12)}]</span>
                                         {log}
@@ -114,7 +114,7 @@ export default function BootSequence({ children, onComplete, mode = 'boot' }: { 
                                     <motion.div
                                         animate={{ opacity: [1, 0, 1] }}
                                         transition={{ repeat: Infinity, duration: 0.8 }}
-                                        className="mt-2 h-4 w-3 bg-terminal-green"
+                                        className="mt-2 h-4 w-3 bg-[#0d9488]"
                                     />
                                 )}
                             </div>

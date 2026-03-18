@@ -1,6 +1,7 @@
 import './globals.css';
 import { Metadata } from 'next';
 import ClientLayout from '../components/ClientLayout';
+import Providers from '../components/Providers';
 
 export const metadata: Metadata = {
   title: 'Pratham Vishwakarma | Backend & DevOps Engineer',
@@ -33,9 +34,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="bg-background text-terminal-text antialiased">
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <Providers>
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+        </Providers>
       </body>
     </html>
   );
