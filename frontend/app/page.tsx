@@ -3,17 +3,17 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, Suspense, useEffect } from 'react';
 import axios from 'axios';
-import { useSoundEffects } from '../../hooks/useSoundEffects';
-import BootSequence from '../../components/BootSequence';
+import { useSoundEffects } from '../hooks/useSoundEffects';
+import BootSequence from '../components/BootSequence';
 
-import { getApiBaseUrl } from '../../lib/config';
+import { getApiBaseUrl } from '../lib/config';
 
 const API_BASE_URL = getApiBaseUrl();
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [redirectTo, setRedirectTo] = useState('/desktop');
+  const [redirectTo, setRedirectTo] = useState('/notes');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);

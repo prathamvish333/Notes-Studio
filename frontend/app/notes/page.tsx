@@ -44,6 +44,8 @@ export default function NotesDirectory({ standalone = false }: { standalone?: bo
         } catch (err: any) {
             if (err.response?.status === 401 && token) {
                 window.localStorage.removeItem('token');
+                router.push('/login?redirect=/notes');
+                return;
             }
             // Still try to show something for public access
             setError(err.response?.data?.detail || 'Unable to load notes. The API may require authentication.');
