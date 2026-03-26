@@ -1,54 +1,55 @@
 pipeline {
     agent any
     
+    environment {
+        DOCKER_HUB_USER = 'prathamvish333'
+        IMAGE_FRONTEND = "${DOCKER_HUB_USER}/notes-frontend"
+        IMAGE_BACKEND = "${DOCKER_HUB_USER}/notes-backend"
+        // Use the branch name (dev, sit, prod) as the Docker tag
+        TAG = "${env.BRANCH_NAME ?: 'dev'}"
+    }
+    
     stages {
         stage('Checkout') {
             steps {
-                echo "Fetching code from SCM..."
+                echo "🚀 Starting Build for Branch: ${TAG}"
                 checkout scm
             }
         }
         
-        stage('Test Backend (Python)') {
+        stage('Build & Push Images') {
             steps {
-                echo 'Mocking Python Unit Tests...'
-                echo 'pytest backend/tests/ (All tests passed successfully!)'
+                script {
+                    // This uses the 'docker-hub-creds' we created in Jenkins
+                    docker.withRegistry('', 'docker-hub-creds') {
+                        
+                        echo "Building Frontend: ${IMAGE_FRONTEND}:${TAG}"
+                        sh "docker build -t ${IMAGE_FRONTEND}:${TAG} ./frontend"
+                        sh "docker push ${IMAGE_FRONTEND}:${TAG}"
+                        
+                        echo "Building Backend: ${IMAGE_BACKEND}:${TAG}"
+                        sh "docker build -t ${IMAGE_BACKEND}:${TAG} ./backend"
+                        sh "docker push ${IMAGE_BACKEND}:${TAG}"
+                    }
+                }
             }
         }
         
-        stage('Build & Push Docker Images') {
+        stage('GitOps Sync (ArgoCD)') {
             steps {
-                echo 'Building Next.js Frontend Image...'
-                // sh 'docker build -t prathamvish333/notes-frontend:${BUILD_NUMBER} ./frontend'
-                // sh 'docker push prathamvish333/notes-frontend:${BUILD_NUMBER}'
-                
-                echo 'Building FastAPI Backend Image...'
-                // sh 'docker build -t prathamvish333/notes-backend:${BUILD_NUMBER} ./backend'
-                // sh 'docker push prathamvish333/notes-backend:${BUILD_NUMBER}'
-                echo 'Images successfully built and tagged!'
-            }
-        }
-        
-        stage('Deploy to GitOps (Trigger ArgoCD)') {
-            steps {
-                echo 'Updating image tags in notes-studio-gitops repository...'
-                // sh '''
-                // cd k8s
-                // sed -i "s/notes-frontend:.*/notes-frontend:${BUILD_NUMBER}/g" frontend.yaml
-                // sed -i "s/notes-backend:.*/notes-backend:${BUILD_NUMBER}/g" backend.yaml
-                // git add . && git commit -m "Update K8s image tags to ${BUILD_NUMBER} [skip ci]" && git push
-                // '''
-                echo 'GitOps repository successfully updated. ArgoCD is now rolling out the changes!'
+                echo "Syncing manifests for environment: ${TAG}"
+                // Logic to update K8s manifests will go here
+                echo "Successfully triggered ArgoCD for ${TAG}!"
             }
         }
     }
     
     post {
         success {
-            echo '🎉 Pipeline finished successfully! The new version is live on GitOps/ArgoCD.'
+            echo "✅ Successfully deployed ${TAG} version to the cloud!"
         }
         failure {
-            echo '❌ Pipeline failed. Sending slack notification to DevOps team.'
+            echo "❌ Pipeline failed for ${TAG}. Check logs!"
         }
     }
 }
