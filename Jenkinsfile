@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_HUB_USER = 'prathamvish333'
+        DOCKER_HUB_USER = 'prathamvish'
         IMAGE_FRONTEND = "${DOCKER_HUB_USER}/notes-frontend"
         IMAGE_BACKEND = "${DOCKER_HUB_USER}/notes-backend"
         // Use the branch name (dev, sit, prod) as the Docker tag
