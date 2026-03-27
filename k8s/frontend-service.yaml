@@ -4,11 +4,10 @@ metadata:
   name: notes-frontend-service
   namespace: notes-dev
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: notes-frontend
   ports:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-      nodePort: 30000
