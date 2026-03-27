@@ -1,0 +1,62 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: notes-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/prathamvish333/Notes-Studio.git
+    targetRevision: dev
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: notes-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: notes-sit
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/prathamvish333/Notes-Studio.git
+    targetRevision: sit
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: notes-sit
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: notes-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/prathamvish333/Notes-Studio.git
+    targetRevision: prod
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: notes-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
