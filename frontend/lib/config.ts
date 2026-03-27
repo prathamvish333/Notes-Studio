@@ -1,9 +1,9 @@
 export const getApiBaseUrl = () => {
     if (typeof window !== 'undefined') {
         const hostname = window.location.hostname;
+        const port = window.location.port;
 
-        // If it's an IP address or localhost, we use the specific port 30008
-        // If it's a custom domain (like notes.com), it likely goes through an Ingress/Cloudflare on port 80/443
+        // If it's an IP address, use the specific NodePort
         const isIP = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(hostname);
         
         if (isIP) {
@@ -11,13 +11,20 @@ export const getApiBaseUrl = () => {
         }
         
         if (hostname === 'prathamvishwakarma.com' || hostname === 'www.prathamvishwakarma.com') {
-            // Point to the dedicated backend subdomain
             return `https://api.prathamvishwakarma.com`;
         }
 
-        if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-            return `${window.location.protocol}//${hostname}`;
+        // When accessed via Ingress (port-forward or otherwise), route API through same origin
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            // If accessed on the default backend port, call backend directly
+            if (port === '8000' || port === '3000') {
+                return 'http://localhost:8000';
+            }
+            // Otherwise we're behind the Ingress — route through /api on same origin
+            return `${window.location.protocol}//${hostname}:${port}/api`;
         }
+
+        return `${window.location.protocol}//${hostname}/api`;
     }
     
     return process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
