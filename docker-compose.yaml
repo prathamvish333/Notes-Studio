@@ -27,7 +27,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8000
 
@@ -44,7 +44,7 @@ services:
     image: grafana/grafana:latest
     container_name: notes-grafana
     ports:
-      - "3001:3000"
+      - "3002:3000"
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_USER=admin
@@ -56,14 +56,17 @@ services:
   jenkins:
     image: jenkins/jenkins:lts
     container_name: notes-jenkins
+    user: root
     ports:
       - "8080:8080"
       - "50000:50000"
     restart: unless-stopped
     environment:
-      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true
     volumes:
       - ./jenkins/init.groovy.d:/var/jenkins_home/init.groovy.d
+      - ./:/var/jenkins_home/local-repo
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   postgres_data:
