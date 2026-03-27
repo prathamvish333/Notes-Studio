@@ -6,7 +6,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: prathamvishwakarma.com
     http:
       paths:
       - path: /notes
@@ -25,8 +24,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: prathamvishwakarma.com
-    http:
+  - http:
       paths:
       - path: /api
         pathType: Prefix
