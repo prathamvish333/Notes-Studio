@@ -1,185 +1,160 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, Suspense, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useSoundEffects } from '../hooks/useSoundEffects';
-import BootSequence from '../components/BootSequence';
-
 import { getApiBaseUrl } from '../lib/config';
 
 const API_BASE_URL = getApiBaseUrl();
 
-function LoginContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [redirectTo, setRedirectTo] = useState('/notes');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showBoot, setShowBoot] = useState(false);
-  const { playBlip, playType } = useSoundEffects();
+type Note = {
+    id: number;
+    title: string;
+    content: string;
+    updated_at: string;
+};
 
-  // Capture redirect on first mount to ensure it's not lost
-  useEffect(() => {
-    const param = searchParams.get('redirect');
-    if (param) {
-      console.log(`DEBUG: Capturing redirect destination: ${param}`);
-      setRedirectTo(param);
-    }
-  }, [searchParams]);
+export default function NotesDirectory({ standalone = false }: { standalone?: boolean }) {
+    const router = useRouter();
+    const [notes, setNotes] = useState<Note[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const { playBlip, playType } = useSoundEffects();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    playBlip();
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await axios.post(`${API_BASE_URL}/auth/login`, {
-        email,
-        password,
-      });
-      const data = res.data;
-      window.localStorage.setItem('token', data.access_token);
-      window.localStorage.setItem('user', JSON.stringify(data.user));
-      setShowBoot(true);
-    } catch (err: any) {
-      const message =
-        err.response?.data?.detail || 'Unable to login. Please try again.';
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const token = typeof window !== 'undefined' ? window.localStorage.getItem('token') : null;
+    const isLoggedIn = !!token;
 
-  if (showBoot) {
+    useEffect(() => {
+        loadNotes();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const loadNotes = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const headers: any = {};
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
+            const res = await axios.get<Note[]>(`${API_BASE_URL}/notes/`, { headers });
+            setNotes(res.data);
+        } catch (err: any) {
+            if (err.response?.status === 401 && token) {
+                window.localStorage.removeItem('token');
+                router.push('/login');
+                return;
+            }
+            // Still try to show something for public access
+            setError(err.response?.data?.detail || 'Unable to load notes. The API may require authentication.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCreate = async () => {
+        if (!isLoggedIn) {
+            router.push('/login');
+            return;
+        }
+        playBlip();
+        setLoading(true);
+        try {
+            const res = await axios.post<Note>(
+                `${API_BASE_URL}/notes/`,
+                { title: 'Untitled', content: '' },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            router.push(`/notes/${res.data.id}`);
+        } catch (err: any) {
+            setError('Could not allocate new file.');
+            setLoading(false);
+        }
+    };
+
+    const openNote = (id: number) => {
+        playType();
+        router.push(`/notes/${id}`);
+    };
+
     return (
-      <BootSequence onComplete={() => {
-        console.log(`DEBUG: Boot complete, executing final redirect to: ${redirectTo}`);
-        router.push(redirectTo);
-      }}>
-        <div />
-      </BootSequence>
-    );
-  }
-
-  return (
-    <div className="flex min-h-[calc(100vh-80px)] items-center justify-center p-4">
-      <div className="terminal-panel w-full max-w-2xl overflow-hidden relative shadow-2xl">
-        {/* Terminal Header Bar */}
-        <div className="flex items-center gap-2 border-b border-terminal-dim bg-terminal-dim/30 px-4 py-2">
-          <div className="h-2.5 w-2.5 rounded-full bg-red-500/80"></div>
-          <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/80"></div>
-          <div className="h-2.5 w-2.5 rounded-full bg-terminal-green/80"></div>
-          <span className="ml-2 font-mono text-[10px] text-terminal-muted">system - login</span>
-        </div>
-
-        <div className="px-8 py-8 flex flex-col md:flex-row gap-8">
-
-          {/* Profile Sidebar */}
-          <div className="flex-1 md:border-r border-terminal-dim md:pr-8 flex flex-col">
-            <h1 className="mt-4 font-mono text-2xl font-bold tracking-tight text-terminal-green uppercase">
-              Pratham Vishwakarma
-            </h1>
-            <h2 className="text-sm font-mono text-terminal-cyan mb-6">
-              Backend and DevOps Engineer
-            </h2>
-
-            <div className="w-full bg-black/40 border border-terminal-dim/50 p-4 rounded font-mono text-[10px] text-terminal-muted/80 space-y-2 flex-grow">
-              <p><span className="text-terminal-cyan">Scripting:</span> Python, Shell Script</p>
-              <p><span className="text-terminal-cyan">Containers:</span> Docker, Kubernetes</p>
-              <p><span className="text-terminal-cyan">Auto & Deploy:</span> Jenkins, Argo CD</p>
-              <p><span className="text-terminal-cyan">Databases:</span> PostgreSQL, MySQL</p>
-              <p><span className="text-terminal-cyan">VCS:</span> Git, GitHub, Azure Repos</p>
-              <p><span className="text-terminal-cyan">Platform:</span> DevOps, AWS</p>
-              <p><span className="text-terminal-cyan">Infra:</span> Terraform</p>
-              <p><span className="text-terminal-cyan">Monitoring:</span> Grafana</p>
-              <p><span className="text-terminal-cyan">OS:</span> Linux</p>
-              <p><span className="text-terminal-cyan">Architecture:</span> Microservices, Event</p>
-            </div>
-          </div>
-
-          {/* Login Form Area */}
-          <div className="flex-1 flex flex-col justify-center">
-            <div className="mb-6 flex flex-col">
-              <h3 className="font-mono text-lg font-bold tracking-tight text-terminal-green">
-                SYSTEM_LOGIN
-              </h3>
-              <p className="mt-1 font-mono text-[10px] text-terminal-muted uppercase tracking-widest">
-                Authenticate to proceed
-              </p>
+        <div className={`flex w-full flex-col ${standalone ? 'h-full p-4' : 'h-[calc(100vh-100px)] p-6 bg-black/40 backdrop-blur-md rounded-2xl border border-terminal-green/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]'}`}>
+            <div className="mb-8 flex items-end justify-between border-b border-terminal-green/30 pb-4">
+                <div>
+                    <h1 className="font-mono text-3xl font-bold text-terminal-green">~/notes</h1>
+                    <p className="mt-1 font-mono text-xs text-terminal-muted">
+                        {isLoggedIn
+                            ? `Access encrypted files (${notes.length} total)`
+                            : 'Public read-only mode — login to create or edit notes'
+                        }
+                    </p>
+                </div>
+                <button
+                    onClick={handleCreate}
+                    disabled={loading}
+                    className="flex h-10 items-center gap-2 rounded bg-terminal-green/20 px-6 font-mono text-xs font-bold text-terminal-green border border-terminal-green/50 transition-all hover:bg-terminal-green/40 hover:shadow-terminal-glow disabled:opacity-50"
+                >
+                    <span>{isLoggedIn ? 'touch new_note.txt' : '🔒 Login to Create'}</span>
+                </button>
             </div>
 
-            {error && (
-              <div className="mb-6 border-l-2 border-red-500 bg-red-500/10 p-3 font-mono text-xs text-red-400">
-                [ERROR]: {error}
-              </div>
+            {/* Public access banner */}
+            {!isLoggedIn && (
+                <div className="mb-4 border-l-2 border-blue-500 bg-blue-500/10 p-3 font-mono text-xs text-blue-400">
+                    ⓘ Authentication required to create or modify notes. Viewing notes is public for demonstration.
+                </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-terminal-cyan">
-                  Username (Email)
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => { playType(); setEmail(e.target.value); }}
-                  className="terminal-input"
-                  placeholder="user@system.local"
-                  required
-                />
-              </div>
+            {error && (
+                <div className="mb-4 border-l-2 border-red-500 bg-red-500/10 p-3 font-mono text-xs text-red-400">
+                    [ERROR]: {error}
+                </div>
+            )}
 
-              <div>
-                <label className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-terminal-cyan">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => { playType(); setPassword(e.target.value); }}
-                  className="terminal-input tracking-widest"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="terminal-btn mt-6"
-              >
-                <span className="mr-2">&gt;</span>
-                {loading ? 'AUTHENTICATING...' : 'EXECUTE_LOGIN'}
-              </button>
-            </form>
-
-            <div className="mt-8 border-t border-terminal-dim pt-6 text-center">
-              <p className="font-mono text-[10px] text-terminal-muted">
-                Unidentified user?{' '}
-                <button
-                  type="button"
-                  onClick={() => { playBlip(); router.push('/signup'); }}
-                  className="text-terminal-cyan underline-offset-4 hover:underline"
-                >
-                  Request Access
-                </button>
-              </p>
-            </div>
-          </div>
+            {loading && notes.length === 0 ? (
+                <div className="flex flex-1 items-center justify-center font-mono text-terminal-muted animate-pulse">
+                    SCANNING FILESYSTEM...
+                </div>
+            ) : notes.length === 0 ? (
+                <div className="flex flex-1 flex-col items-center justify-center font-mono text-terminal-muted opacity-50">
+                    <div className="text-6xl mb-4">📭</div>
+                    <p>Directory is empty.</p>
+                    {!isLoggedIn && (
+                        <button
+                            onClick={() => router.push('/login')}
+                            className="mt-4 text-terminal-green underline text-xs"
+                        >
+                            Login to create the first note
+                        </button>
+                    )}
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-y-auto pb-8 pr-2 custom-scrollbar">
+                    {notes.map((note, idx) => (
+                        <motion.div
+                            key={note.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.05 }}
+                        >
+                            <button
+                                onClick={() => openNote(note.id)}
+                                className="group flex h-40 w-full flex-col items-start overflow-hidden rounded-lg border border-terminal-dim bg-terminal-board/60 p-5 text-left transition-all hover:-translate-y-1 hover:border-terminal-green/50 hover:bg-terminal-dim/80 hover:shadow-[0_4px_20px_rgba(0,255,65,0.1)]"
+                            >
+                                <div className="flex w-full items-center justify-between font-mono text-xs text-terminal-cyan mb-2">
+                                    <span className="font-bold uppercase truncate max-w-[80%]">{note.title || 'untitled.md'}</span>
+                                    <span className="opacity-50 group-hover:opacity-100">{new Date(note.updated_at).toLocaleDateString()}</span>
+                                </div>
+                                <div className="w-full mt-2 font-mono text-[10px] text-terminal-muted line-clamp-4 leading-relaxed group-hover:text-terminal-text transition-colors">
+                                    {note.content || '/* empty file */'}
+                                </div>
+                            </button>
+                        </motion.div>
+                    ))}
+                </div>
+            )}
         </div>
-      </div>
-    </div>
-  );
+    );
 }
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center font-mono text-terminal-green">LOADING_AUTH_SYSTEM...</div>}>
-      <LoginContent />
-    </Suspense>
-  );
-}
-
