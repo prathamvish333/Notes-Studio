@@ -4,9 +4,9 @@ import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useSoundEffects } from '../../../hooks/useSoundEffects';
+import { useSoundEffects } from '../../hooks/useSoundEffects';
 
-import { getApiBaseUrl } from '../../../lib/config';
+import { getApiBaseUrl } from '../../lib/config';
 
 const API_BASE_URL = getApiBaseUrl();
 
@@ -66,7 +66,7 @@ export default function NoteEditor() {
                 { title: draftTitle, content: draftContent },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            router.push('/notes');
+            router.push('/');
         } catch (err: any) {
             setError('Could not save note changes.');
         } finally {
@@ -83,7 +83,7 @@ export default function NoteEditor() {
             await axios.delete(`${API_BASE_URL}/notes/${noteId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            router.push('/notes');
+            router.push('/');
         } catch (err: any) {
             setError('Could not delete note.');
             setSaving(false);
@@ -92,7 +92,7 @@ export default function NoteEditor() {
 
     const handleBack = () => {
         playBlip();
-        router.push('/notes');
+        router.push('/');
     };
 
     if (loading) {

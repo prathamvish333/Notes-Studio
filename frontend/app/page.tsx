@@ -67,7 +67,7 @@ export default function NotesDirectory({ standalone = false }: { standalone?: bo
                 { title: 'Untitled', content: '' },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            router.push(`/notes/${res.data.id}`);
+            router.push(`/${res.data.id}`);
         } catch (err: any) {
             setError('Could not allocate new file.');
             setLoading(false);
@@ -76,7 +76,7 @@ export default function NotesDirectory({ standalone = false }: { standalone?: bo
 
     const openNote = (id: number) => {
         playType();
-        router.push(`/notes/${id}`);
+        router.push(`/${id}`);
     };
 
     return (
