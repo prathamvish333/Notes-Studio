@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pratham Vishwakarma - Resume</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 9mm 12mm;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Arial', Helvetica, sans-serif;
+            font-size: 10.4pt;
+            line-height: 1.28;
+            color: #000000;
+        }
+        h1 {
+            font-size: 20pt;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .contact-info {
+            text-align: center;
+            font-size: 9.4pt;
+            margin-bottom: 10px;
+            line-height: 1.35;
+        }
+        .contact-info a {
+            color: #000000;
+            text-decoration: none;
+        }
+        h2 {
+            font-size: 12.2pt;
+            font-weight: bold;
+            border-bottom: 1.5px solid #000000;
+            padding-bottom: 2px;
+            margin-top: 17px;
+            margin-bottom: 7px;
+        }
+        h2:first-of-type {
+            margin-top: 0;
+        }
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 10pt;
+            margin-top: 5px;
+            margin-bottom: 1px;
+        }
+        .italic-subtitle {
+            font-style: italic;
+            font-size: 9.4pt;
+            margin-bottom: 3px;
+        }
+        .italic-subtitle a {
+            color: #000000;
+            text-decoration: none;
+        }
+        .skills-list {
+            margin-bottom: 4px;
+        }
+        .skills-list p {
+            margin-bottom: 3px;
+            line-height: 1.28;
+        }
+        ul {
+            margin-bottom: 5px;
+            padding-left: 16px;
+        }
+        li {
+            margin-bottom: 5px;
+            line-height: 1.28;
+        }
+        p {
+            line-height: 1.28;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pratham Vishwakarma</h1>
+    <div class="contact-info">
+        <strong>Email:</strong> <a href="mailto:prathamvishwakarma2000@gmail.com">prathamvishwakarma2000@gmail.com</a> &nbsp;&nbsp;&nbsp; <strong>Phone:</strong> +91-7879124124<br>
+        <strong>Location:</strong> Navi Mumbai, Maharashtra, India &nbsp;&nbsp;&nbsp; <strong>LinkedIn:</strong> <a href="https://linkedin.com/in/prathamvishwakarma">linkedin.com/in/prathamvishwakarma</a><br>
+        <strong>Portfolio:</strong> <a href="https://www.prathamvishwakarma.com">www.prathamvishwakarma.com</a>
+    </div>
+
+    <h2>Professional Summary</h2>
+    <p>Software Development Engineer I at Jio Platforms, delivering Python‑based FastAPI services and DevOps automation. Built a FastAPI MCP server exposing 50+ tools and engineered Kubernetes‑native infrastructure to automate hybrid cloud operations and reduce MTTD by 40%.</p>
+
+    <h2>Technical Skills</h2>
+    <div class="skills-list">
+        <p><strong>Languages & Frameworks:</strong> Python, FastAPI, Shell scripting</p>
+        <p><strong>DevOps &amp; Cloud:</strong> AWS, Docker, Kubernetes, Jenkins, ArgoCD, Terraform</p>
+        <p><strong>Tools:</strong> Prometheus, Grafana, SaltStack, MCP (AI infrastructure)</p>
+        <p><strong>Databases:</strong> PostgreSQL, MySQL</p>
+    </div>
+
+    <h2>Professional Experience</h2>
+    <div class="header-flex">
+        <span>Software Development Engineer I | Jio Platforms Limited</span>
+        <span>Navi Mumbai, MH | Dec 2023 - Present</span>
+    </div>
+    <div class="italic-subtitle">Product Engineering - Jio CloudXP / Hybrid Cloud Management Platform</div>
+    <ul>
+        <li><strong>AI Infrastructure &amp; Automation:</strong> Built and deployed a FastAPI MCP server exposing 50+ AI-callable infrastructure tools, enabling LLM agents to autonomously orchestrate production operations and reducing Mean Time To Diagnose (MTTD) by 40%.</li>
+        <li><strong>SaltStack Statefile Management:</strong> Enforced 'Golden Config' compliance across hundreds of production servers using SaltStack state files and Goss automated validation, eliminating configuration drift. Integrated Fluent Bit log forwarding for newly provisioned VMs to enable centralized logging.</li>
+        <li><strong>Automation Development &amp; Reusable Workflow Packs:</strong> Developed modular automation workflow packs using Python and Robot Framework for Jio CloudXP, increasing automation delivery speed by 60% and reducing manual execution by 50%.</li>
+        <li><strong>Backend Development &amp; Cross-Platform Execution Logic:</strong> Engineered a unified cross-platform backend for RPA across Linux (SSH/SCP) and Windows (WinRM) environments, achieving 100% execution compatibility and reducing development effort by 25%.</li>
+    </ul>
+
+
+    <h2>Projects</h2>
+    <div class="header-flex">
+        <span>Notes-Studio - Cloud-Native Microservices Application</span>
+        <span>March 2026 - Present</span>
+    </div>
+    <div class="italic-subtitle"><a href="https://www.prathamvishwakarma.com/notes">www.prathamvishwakarma.com/notes</a></div>
+    <ul>
+        <li><strong>Architecture and Kubernetes:</strong> Engineered a containerized 3-tier microservices application using FastAPI, PostgreSQL, and Next.js with JWT-based authentication. Deployed on Kubernetes using Persistent Volume Claims (PVCs) and Secrets for secure state management.</li>
+        <li><strong>CI/CD &amp; Observability:</strong> Built zero-downtime Jenkins pipelines with automated rollback and integrated Prometheus and Grafana for real-time API performance and infrastructure monitoring across DEV, SIT, and PROD environments.</li>
+    </ul>
+
+    <div class="header-flex">
+        <span>Yashasvi Duniya - Live Hindi News Platform</span>
+        <span>Nov 2025 - Jan 2026</span>
+    </div>
+    <div class="italic-subtitle"><a href="https://www.yashasviduniya.com">www.yashasviduniya.com</a></div>
+    <ul>
+        <li><strong>DevOps &amp; Infra:</strong> Architected cloud infrastructure and automated CI/CD pipelines for a high-traffic live news portal, implementing system monitoring and caching strategies to ensure maximum uptime during news traffic spikes.</li>
+        <li><strong>Scale &amp; Impact:</strong> Managed peak traffic of 5k concurrent users, maintaining 99.8% availability and sub‑second page loads.</li>
+    </ul>
+
+    <h2>Education</h2>
+    <div class="header-flex">
+        <span>B.Tech in Computer Science Engineering</span>
+        <span>2019 - 2023</span>
+    </div>
+    <div class="italic-subtitle">Acropolis Institute of Technology &amp; Research, Indore, MP</div>
+
+</body>
+</html>
