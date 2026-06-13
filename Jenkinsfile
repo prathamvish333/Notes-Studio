@@ -109,8 +109,8 @@ pipeline {
                 sed -i "s|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${BUILD_NUMBER}|g" backend.yaml
                 
                 # Apply the changes to the cluster
-                microk8s kubectl apply -f frontend.yaml
-                microk8s kubectl apply -f backend.yaml
+                kubectl apply -f frontend.yaml
+                kubectl apply -f backend.yaml
                 """
                 echo 'Successfully deployed to Kubernetes!'
             }
