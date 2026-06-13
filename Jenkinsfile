@@ -98,21 +98,30 @@ pipeline {
             }
         }
         
-        stage('8. Deploy to Kubernetes') {
+        stage('8. Update Git Manifests (GitOps)') {
             steps {
-                echo 'Updating K8s YAML files with new image tags...'
-                sh """
-                cd k8s
-                
-                # Replace the image tag in the yaml files
-                sed -i "s|image: ${FRONTEND_IMAGE}:.*|image: ${FRONTEND_IMAGE}:${BUILD_NUMBER}|g" frontend.yaml
-                sed -i "s|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${BUILD_NUMBER}|g" backend.yaml
-                
-                # Apply the changes to the cluster
-                kubectl apply -f frontend.yaml
-                kubectl apply -f backend.yaml
-                """
-                echo 'Successfully deployed to Kubernetes!'
+                echo 'Updating K8s YAML files with new image tags and pushing to Git...'
+                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                    sh """
+                    # Configure git identity
+                    git config --global user.email "jenkins@prathamvishwakarma.com"
+                    git config --global user.name "Jenkins CI"
+                    
+                    cd k8s
+                    
+                    # Replace the image tag in the yaml files
+                    sed -i "s|image: ${FRONTEND_IMAGE}:.*|image: ${FRONTEND_IMAGE}:${BUILD_NUMBER}|g" frontend.yaml
+                    sed -i "s|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${BUILD_NUMBER}|g" backend.yaml
+                    
+                    # Commit and push changes
+                    git add frontend.yaml backend.yaml
+                    git commit -m "Update image tags to build \${BUILD_NUMBER} [skip ci]"
+                    
+                    # Push back to the dev branch using the token
+                    git push https://prathamvish333:\${GITHUB_TOKEN}@github.com/prathamvish333/Notes-Studio.git HEAD:dev
+                    """
+                }
+                echo 'Successfully updated Git! ArgoCD will sync the changes shortly.'
             }
         }
     }
