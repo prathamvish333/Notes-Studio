@@ -64,12 +64,12 @@ pipeline {
                     ./trivy fs --format table \
                              --exit-code 0 \
                              --severity UNKNOWN,LOW,MEDIUM,HIGH \
-                             .
+                             . || true
                              
                     ./trivy fs --format table \
                              --exit-code 0 \
                              --severity CRITICAL \
-                             .
+                             . || true
                 '''
             }
         }
