@@ -17,6 +17,14 @@ pipeline {
             steps {
                 echo 'Cloning the dev branch...'
                 git branch: "${BRANCH_NAME}", url: "${GIT_URL}"
+                
+                script {
+                    def commitMsg = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                    if (commitMsg.contains('[skip ci]')) {
+                        currentBuild.result = 'NOT_BUILT'
+                        error("Stopping build: Commit message contains [skip ci]")
+                    }
+                }
             }
         }
 
