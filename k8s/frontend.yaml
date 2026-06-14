@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: prathamvish333/notes-frontend:18
+          image: prathamvish333/notes-frontend:19
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
