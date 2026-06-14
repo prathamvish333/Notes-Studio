@@ -1,0 +1,71 @@
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3002
+
+ ✓ Starting...
+ ✓ Ready in 2.6s
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1593ms (1274 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET /devops 404 in 1685ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 19ms
+ ○ Compiling /devops ...
+ ✓ Compiled /devops in 531ms (1498 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET /devops 200 in 645ms
+ ✓ Compiled /_not-found in 201ms (1487 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET /devops 404 in 18ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 28ms
+ ✓ Compiled /icon.png in 169ms (832 modules)
+ GET /notes/icon.png?cca11f2caf29aa02 200 in 223ms
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 53ms
+ ✓ Compiled in 382ms (1498 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ✓ Compiled /_not-found in 108ms (1487 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET /devops 404 in 46ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 11ms
+ GET /devops 200 in 65ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 16ms
+ ✓ Compiled /icon.png in 79ms (832 modules)
+ GET /notes/icon.png?cca11f2caf29aa02 200 in 132ms
+ ✓ Compiled in 214ms (699 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ✓ Compiled /_not-found in 161ms (1487 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET /devops 404 in 41ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 13ms
+ ✓ Compiled in 88ms (701 modules)
+ GET /devops 404 in 15ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 11ms
+ GET /devops 200 in 80ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 23ms
+ ✓ Compiled /icon.png in 99ms (832 modules)
+ GET /notes/icon.png?cca11f2caf29aa02 200 in 152ms
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET /devops 200 in 66ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 22ms
+ GET /notes/icon.png?cca11f2caf29aa02 200 in 15ms
+ GET /devops 200 in 20ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 20ms
+ GET /notes/icon.png?cca11f2caf29aa02 200 in 15ms
+ GET /devops 200 in 30ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 15ms
+ GET /notes/icon.png?cca11f2caf29aa02 200 in 14ms
+ GET / 404 in 17ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 15ms
+ ✓ Compiled / in 299ms (1529 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET / 200 in 345ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 34ms
+ GET /api/notes 404 in 37ms
+ GET /api/notes 404 in 8ms
+ GET /api/notes 404 in 33ms
+ GET /api/notes 404 in 15ms
+ ✓ Compiled in 527ms (1508 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ✓ Compiled /_not-found in 129ms (1497 modules)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET /devops 404 in 63ms
+ GET /brain/e4b00bc3-e9d1-4cd5-80ae-8c4bd1ce0513/wallpaper_hacker_3d_pratham_1773350235433.png 404 in 17ms

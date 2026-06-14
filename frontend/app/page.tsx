@@ -91,13 +91,21 @@ export default function NotesDirectory({ standalone = false }: { standalone?: bo
                         }
                     </p>
                 </div>
-                <button
-                    onClick={handleCreate}
-                    disabled={loading}
-                    className="flex h-10 items-center gap-2 rounded bg-terminal-green/20 px-6 font-mono text-xs font-bold text-terminal-green border border-terminal-green/50 transition-all hover:bg-terminal-green/40 hover:shadow-terminal-glow disabled:opacity-50"
-                >
-                    <span>{isLoggedIn ? 'touch new_note.txt' : '🔒 Login to Create'}</span>
-                </button>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => router.push('/devops')}
+                        className="flex h-10 items-center gap-2 rounded bg-teal-500/10 px-6 font-mono text-xs font-bold text-teal-400 border border-teal-500/50 transition-all hover:bg-teal-500/30 hover:shadow-[0_0_15px_rgba(20,184,166,0.3)]"
+                    >
+                        <span>🤖 MCP AI Tool</span>
+                    </button>
+                    <button
+                        onClick={handleCreate}
+                        disabled={loading}
+                        className="flex h-10 items-center gap-2 rounded bg-terminal-green/20 px-6 font-mono text-xs font-bold text-terminal-green border border-terminal-green/50 transition-all hover:bg-terminal-green/40 hover:shadow-terminal-glow disabled:opacity-50"
+                    >
+                        <span>{isLoggedIn ? 'touch new_note.txt' : '🔒 Login to Create'}</span>
+                    </button>
+                </div>
             </div>
 
             {/* Public access banner */}

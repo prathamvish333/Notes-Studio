@@ -142,6 +142,9 @@ export default function Taskbar({ windows = [], onFocus }: TaskbarProps) {
                                     <h3 className="font-mono text-terminal-green font-bold text-[11px]">PRATHAM_OS_v1</h3>
                                 </div>
                                 <div className="p-1.5 flex flex-col gap-1">
+                                    <button onClick={() => { setIsStartOpen(false); router.push('/devops'); }} className="flex items-center gap-3 w-full p-2 font-mono text-left text-[11px] text-teal-400 hover:bg-teal-400/10 hover:text-teal-300 rounded group transition-all font-bold">
+                                        <span className="text-base group-hover:scale-110 transition-transform">🤖</span> MCP AI Agent
+                                    </button>
                                     <button onClick={handleRestart} className="flex items-center gap-3 w-full p-2 font-mono text-left text-[11px] text-terminal-text hover:bg-terminal-yellow/10 hover:text-terminal-yellow rounded group transition-all">
                                         <span className="text-base group-hover:rotate-180 transition-transform">🔄</span> Restart Service
                                     </button>

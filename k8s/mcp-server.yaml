@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mcp-server-sa
+  # We deploy it in notes-dev but it will have cluster-wide read access
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: mcp-server-role
+rules:
+# Grant access to read pods, logs, and nodes for our k8s_tools
+- apiGroups: [""]
+  resources: ["pods", "pods/log", "namespaces", "nodes"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: mcp-server-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: mcp-server-role
+subjects:
+- kind: ServiceAccount
+  name: mcp-server-sa
+  # Update this namespace if you deploy the MCP server somewhere else
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-server
+  template:
+    metadata:
+      labels:
+        app: mcp-server
+    spec:
+      serviceAccountName: mcp-server-sa
+      containers:
+      - name: mcp-server
+        image: prathamvish333/notes-mcp-server:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        # Secrets should be created manually on the cluster via:
+        # kubectl create secret generic mcp-secrets --from-literal=GEMINI_API_KEY="..."
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mcp-secrets
+              key: GEMINI_API_KEY
+              optional: true
+        # Default internal URLs (adjust based on your actual VM setup)
+        - name: JENKINS_URL
+          value: "http://localhost:8080" 
+        - name: ARGOCD_URL
+          value: "http://argocd-server.argocd.svc.cluster.local:80"
+        volumeMounts:
+        # We mount the host VM's docker socket so `docker image ls` works inside the container
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-server
+spec:
+  selector:
+    app: mcp-server
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

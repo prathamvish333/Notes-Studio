@@ -29,8 +29,12 @@ What began as a simple note-taking tool has evolved into a complete **Microservi
 ### 4. Hacker Terminal System Preferences
 ![Hacker Type App](./docs/screenshots/hackertype.png)
 
-## �🚀 Key Features
+### 5. DevOps MCP AI Agent
+A fully integrated FastMCP server running Gemini AI that executes live Kubernetes diagnostics, fetches Jenkins builds, and performs Trivy security scans directly via chat commands in the OS interface.
 
+## 🚀 Key Features
+
+*   **DevOps MCP AI Agent**: Built-in AI orchestrator capable of reading cluster states, analyzing logs, and interacting with CI/CD tools via the Model Context Protocol.
 *   **Interactive Web OS**: A fully draggable, window-managed React frontend simulating a terminal-driven Linux environment.
 *   **3-Tier Backend Architecture**: High-performance **FastAPI** backend with **PostgreSQL**, featuring secure **JWT authentication** and strict Pydantic data validation.
 *   **Kubernetes Orchestration**: Cloud-native deployment using **K8s** with **Persistent Volumes (PVC)** for data durability and **Secrets** for secure credential management.
