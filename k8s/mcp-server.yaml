@@ -25,8 +25,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: mcp-server-sa
-  # Update this namespace if you deploy the MCP server somewhere else
-  namespace: default
+  namespace: notes-dev
 ---
 apiVersion: apps/v1
 kind: Deployment
