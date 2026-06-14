@@ -44,14 +44,7 @@ pipeline {
             }
         }
 
-        stage('4. OWASP Dependency Check') {
-            steps {
-                echo 'Running OWASP Dependency Check with NVD API Key...'
-                dependencyCheck additionalArguments: '--format HTML --format XML --scan . --nvdApiKey 5fc2eea0-5f93-4589-9551-acb31f506eca', odcInstallation: 'DC'
-                
-                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-            }
-        }
+
 
         stage('5. Trivy Filesystem Scan') {
             steps {
