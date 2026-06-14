@@ -27,9 +27,8 @@ export default function AIChat() {
         setLoading(true);
 
         try {
-            // Target the local MCP server API.
-            // If running in production Kubernetes, we would use a dynamic config variable here.
-            const res = await axios.post('http://localhost:8082/api/chat', { message: userMsg });
+            // Target the Next.js API proxy to avoid CORS and localhost issues
+            const res = await axios.post('/api/mcp/chat', { message: userMsg });
             setMessages(prev => [...prev, { role: 'ai', content: res.data.reply }]);
         } catch (error: any) {
             setMessages(prev => [...prev, { role: 'ai', content: `[ERROR] Failed to connect to AI server: ${error.message}. Make sure the MCP server is running on port 8082.` }]);

@@ -53,8 +53,8 @@ export const getExternalUrl = (service: 'grafana' | 'prometheus' | 'jenkins' | '
             
             if (service === 'swagger') return `https://${backendSubdomain}/docs`;
             
-            // For other tools, we might need dedicated subdomains or port mapping
-            return `https://${service}.prathamvishwakarma.com`;
+            // For other tools, default to http:// to avoid SSL errors until certs are provisioned
+            return `http://${service}.prathamvishwakarma.com`;
         }
 
         const backendVM = "34.67.4.191";

@@ -9,6 +9,7 @@ pipeline {
         DOCKER_HUB_USER = "prathamvish333"
         FRONTEND_IMAGE  = "${DOCKER_HUB_USER}/notes-frontend"
         BACKEND_IMAGE   = "${DOCKER_HUB_USER}/notes-backend"
+        MCP_SERVER_IMAGE = "${DOCKER_HUB_USER}/notes-mcp-server"
         DOCKER_CREDS_ID = "docker-hub-credentials"
     }
 
@@ -87,6 +88,9 @@ pipeline {
                         
                         echo 'Building FastAPI Backend Image...'
                         sh "docker build -t ${BACKEND_IMAGE}:${BUILD_NUMBER} ./backend"
+
+                        echo 'Building MCP Server Image...'
+                        sh "docker build -t ${MCP_SERVER_IMAGE}:${BUILD_NUMBER} ./mcp-server"
                     }
                 }
 
@@ -100,6 +104,9 @@ pipeline {
                             
                             echo 'Pushing Backend Image...'
                             sh "docker push ${BACKEND_IMAGE}:${BUILD_NUMBER}"
+
+                            echo 'Pushing MCP Server Image...'
+                            sh "docker push ${MCP_SERVER_IMAGE}:${BUILD_NUMBER}"
                         }
                     }
                 }
@@ -118,9 +125,10 @@ pipeline {
                             # Replace the image tag in the yaml files
                             sed -i "s|image: ${FRONTEND_IMAGE}:.*|image: ${FRONTEND_IMAGE}:${BUILD_NUMBER}|g" frontend.yaml
                             sed -i "s|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${BUILD_NUMBER}|g" backend.yaml
+                            sed -i "s|image: ${MCP_SERVER_IMAGE}:.*|image: ${MCP_SERVER_IMAGE}:${BUILD_NUMBER}|g" mcp-server.yaml
                             
                             # Commit and push changes
-                            git add frontend.yaml backend.yaml
+                            git add frontend.yaml backend.yaml mcp-server.yaml
                             git commit -m "Update image tags to build \${BUILD_NUMBER} [skip ci]"
                             
                             # Push back to the dev branch using the token
