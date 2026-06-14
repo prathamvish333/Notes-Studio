@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: prathamvish333/notes-backend:21
+          image: prathamvish333/notes-backend:24
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
