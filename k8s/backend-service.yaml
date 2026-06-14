@@ -3,10 +3,11 @@ kind: Service
 metadata:
   name: notes-backend-service
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: notes-backend
   ports:
     - protocol: TCP
       port: 8000
       targetPort: 8000
+      nodePort: 30008
