@@ -28,7 +28,8 @@ export default function AIChat() {
 
         try {
             // Target the Next.js API proxy to avoid CORS and localhost issues
-            const res = await axios.post('/api/mcp/chat', { message: userMsg });
+            // Include the /notes basePath because the Next.js app is mounted there
+            const res = await axios.post('/notes/api/mcp/chat', { message: userMsg });
             setMessages(prev => [...prev, { role: 'ai', content: res.data.reply }]);
         } catch (error: any) {
             setMessages(prev => [...prev, { role: 'ai', content: `[ERROR] Failed to connect to AI server: ${error.message}. Make sure the MCP server is running on port 8082.` }]);
