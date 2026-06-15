@@ -46,7 +46,7 @@ async def chat_endpoint(request: ChatRequest):
         #   3. Return the model's final text answer
         # So response.text will always contain a human-readable reply.
         chat = client.chats.create(
-            model="gemini-2.0-flash",
+            model="gemini-flash-latest",
             config=types.GenerateContentConfig(
                 tools=my_tools,
                 automatic_function_calling=types.AutomaticFunctionCallingConfig(
