@@ -45,25 +45,44 @@ async def chat_endpoint(request: ChatRequest):
         #   2. Send the result back to the model
         #   3. Return the model's final text answer
         # So response.text will always contain a human-readable reply.
+        # We optimize maximum_remote_calls to 3 (down from 10) to conserve free-tier API quota.
         chat = client.chats.create(
             model="gemini-flash-latest",
             config=types.GenerateContentConfig(
                 tools=my_tools,
                 automatic_function_calling=types.AutomaticFunctionCallingConfig(
                     disable=False,
-                    maximum_remote_calls=10,
+                    maximum_remote_calls=3,
                 ),
                 system_instruction=(
                     "You are a DevOps AI assistant with access to tools for "
                     "Kubernetes, Jenkins, ArgoCD, Docker, Trivy, SonarQube and Git. "
                     "When the user asks about infrastructure, always use the available "
-                    "tools to get real-time data before answering."
+                    "tools to get real-time data before answering. Keep responses concise "
+                    "to conserve API usage."
                 ),
             ),
         )
 
-        response = chat.send_message(request.message)
-        return {"reply": response.text}
+        import time
+        from google.genai.errors import APIError
+
+        max_retries = 4
+        retry_delay = 5  # Start with 5 seconds delay for rate limits
+        
+        for attempt in range(max_retries):
+            try:
+                response = chat.send_message(request.message)
+                return {"reply": response.text}
+            except APIError as e:
+                # If we get a 429 Rate Limit error, sleep and retry
+                if e.code == 429 and attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                    continue
+                # For any other API error, or if we ran out of retries, raise it
+                raise e
 
     except Exception as e:
         return {"reply": f"AI Error: {str(e)}"}
+
