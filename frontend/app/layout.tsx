@@ -2,6 +2,7 @@ import './globals.css';
 import { Metadata } from 'next';
 import ClientLayout from '../components/ClientLayout';
 import Providers from '../components/Providers';
+import FloatingAIAgent from '../components/FloatingAIAgent';
 
 export const metadata: Metadata = {
   title: 'Pratham Vishwakarma | Backend & DevOps Engineer',
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </ClientLayout>
         </Providers>
+        <FloatingAIAgent />
       </body>
     </html>
   );
