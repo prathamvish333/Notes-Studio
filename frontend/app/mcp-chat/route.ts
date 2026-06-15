@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         // Use the Kubernetes internal service name if running in K8s, 
         // fallback to localhost for local development
         const mcpUrl = process.env.NODE_ENV === 'production' 
-            ? 'http://mcp-server:8080/api/chat'
+            ? 'http://mcp-server.notes-dev.svc.cluster.local:8080/api/chat'
             : 'http://localhost:8082/api/chat';
 
         const response = await fetch(mcpUrl, {
