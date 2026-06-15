@@ -32,3 +32,15 @@ export async function POST(request: Request) {
         );
     }
 }
+
+export async function GET() {
+    return NextResponse.json({ reply: "GET request received. Please use POST for AI Chat." });
+}
+
+export async function OPTIONS() {
+    const response = new NextResponse(null, { status: 204 });
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    return response;
+}
