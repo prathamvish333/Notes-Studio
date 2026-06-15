@@ -59,7 +59,7 @@ spec:
               optional: true
         # Default internal URLs (adjust based on your actual VM setup)
         - name: JENKINS_URL
-          value: "http://localhost:8080" 
+          value: "http://notes-app-svc.default.svc.cluster.local:8080" 
         - name: ARGOCD_URL
           value: "http://argocd-server.argocd.svc.cluster.local:80"
         volumeMounts:
