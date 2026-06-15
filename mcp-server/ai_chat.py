@@ -12,11 +12,15 @@ async def chat_endpoint(request: ChatRequest):
     """
     Receives a message from the frontend, sends it to Gemini (with access to our DevOps tools),
     and returns the intelligent response.
+
+    Uses the google-genai SDK with automatic_function_calling so that when Gemini
+    decides to invoke a tool, the SDK executes the local Python function automatically
+    and feeds the result back — giving us a final text reply every time.
     """
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return {"reply": "Error: GEMINI_API_KEY environment variable is not set. Cannot contact AI."}
-        
+
     try:
         from google import genai
         from google.genai import types
@@ -35,15 +39,30 @@ async def chat_endpoint(request: ChatRequest):
             docker_list_containers, git_recent_commits
         ]
 
-        # Use the new SDK with gemini-2.0-flash-latest (supports function calling)
-        response = client.models.generate_content(
-            model="gemini-2.0-flash-latest",
-            contents=request.message,
+        # Use a chat session with automatic_function_calling (default: enabled).
+        # This means when the model returns a tool call, the SDK will:
+        #   1. Execute the matching Python function locally
+        #   2. Send the result back to the model
+        #   3. Return the model's final text answer
+        # So response.text will always contain a human-readable reply.
+        chat = client.chats.create(
+            model="gemini-2.0-flash",
             config=types.GenerateContentConfig(
                 tools=my_tools,
+                automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                    disable=False,
+                    maximum_remote_calls=10,
+                ),
+                system_instruction=(
+                    "You are a DevOps AI assistant with access to tools for "
+                    "Kubernetes, Jenkins, ArgoCD, Docker, Trivy, SonarQube and Git. "
+                    "When the user asks about infrastructure, always use the available "
+                    "tools to get real-time data before answering."
+                ),
             ),
         )
 
+        response = chat.send_message(request.message)
         return {"reply": response.text}
 
     except Exception as e:
