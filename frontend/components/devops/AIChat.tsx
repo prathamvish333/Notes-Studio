@@ -27,9 +27,12 @@ export default function AIChat() {
         setLoading(true);
 
         try {
-            // Target the Next.js proxy route directly (avoiding the /api prefix to bypass Ingress collision)
-            // Include the /notes basePath because the Next.js app is mounted there
-            const res = await axios.post('/notes/mcp-chat', { message: userMsg });
+            // Target the Next.js proxy route directly
+            // Override Accept header so Nginx doesn't intercept it as a backend API request
+            const res = await axios.post('/notes/mcp-chat', 
+                { message: userMsg },
+                { headers: { 'Accept': '*/*' } }
+            );
             setMessages(prev => [...prev, { role: 'ai', content: res.data.reply }]);
         } catch (error: any) {
             setMessages(prev => [...prev, { role: 'ai', content: `[ERROR] Failed to connect to AI server: ${error.message}. Make sure the MCP server is running on port 8082.` }]);
