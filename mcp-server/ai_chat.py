@@ -21,9 +21,6 @@ async def chat_endpoint(request: ChatRequest):
     try:
         genai.configure(api_key=api_key)
         
-        # We use the Gemini Flash model as it is extremely fast and great for function calling
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        
         from k8s_tools import k8s_get_pods, k8s_get_logs, k8s_get_secret
         from cicd_tools import jenkins_get_builds, argocd_get_apps
         from security_tools import trivy_scan_image, sonarqube_get_metrics
@@ -36,9 +33,13 @@ async def chat_endpoint(request: ChatRequest):
             docker_list_containers, git_recent_commits
         ]
         
+        # We use the Gemini Flash model as it is extremely fast and great for function calling
+        # Register the tools directly during initialization of GenerativeModel
+        model = genai.GenerativeModel('gemini-1.5-flash', tools=my_tools)
+        
         # We start a chat session because function calling requires maintaining conversation history
         # so the model can call the tool, receive the response, and then answer the user.
-        chat = model.start_chat(tools=my_tools)
+        chat = model.start_chat()
         
         # Send the user's message. The model may decide to call a tool, in which case the chat wrapper
         # will automatically execute our local Python function and send the result back to Gemini!
