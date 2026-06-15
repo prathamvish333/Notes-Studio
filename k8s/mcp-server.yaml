@@ -44,7 +44,7 @@ spec:
       serviceAccountName: mcp-server-sa
       containers:
       - name: mcp-server
-        image: prathamvish333/notes-mcp-server:64
+        image: prathamvish333/notes-mcp-server:66
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
