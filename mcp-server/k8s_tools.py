@@ -38,7 +38,28 @@ def k8s_get_logs(pod_name: str, namespace: str = "notes-dev", lines: int = 50) -
     except Exception as e:
         return f"Error fetching logs for pod {pod_name}: {str(e)}"
 
+def k8s_get_secret(secret_name: str, namespace: str = "argocd") -> str:
+    """Fetch and decode a Kubernetes secret. Useful for retrieving ArgoCD or Jenkins passwords."""
+    try:
+        import base64
+        v1 = client.CoreV1Api()
+        secret = v1.read_namespaced_secret(name=secret_name, namespace=namespace)
+        if not secret.data:
+            return f"Secret {secret_name} has no data."
+        
+        decoded_data = {}
+        for key, value in secret.data.items():
+            try:
+                decoded_data[key] = base64.b64decode(value).decode('utf-8')
+            except Exception:
+                decoded_data[key] = "<binary or non-utf8 data>"
+                
+        return json.dumps(decoded_data, indent=2)
+    except Exception as e:
+        return f"Error fetching secret {secret_name} in namespace {namespace}: {str(e)}"
+
 def register_k8s_tools(mcp):
     """Registers Kubernetes-related tools with the provided FastMCP server."""
     mcp.tool()(k8s_get_pods)
     mcp.tool()(k8s_get_logs)
+    mcp.tool()(k8s_get_secret)

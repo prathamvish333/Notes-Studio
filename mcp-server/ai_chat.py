@@ -24,13 +24,13 @@ async def chat_endpoint(request: ChatRequest):
         # We use the Gemini Flash model as it is extremely fast and great for function calling
         model = genai.GenerativeModel('gemini-1.5-flash')
         
-        from k8s_tools import k8s_get_pods, k8s_get_logs
+        from k8s_tools import k8s_get_pods, k8s_get_logs, k8s_get_secret
         from cicd_tools import jenkins_get_builds, argocd_get_apps
         from security_tools import trivy_scan_image, sonarqube_get_metrics
         from infra_tools import docker_list_containers, git_recent_commits
         
         my_tools = [
-            k8s_get_pods, k8s_get_logs,
+            k8s_get_pods, k8s_get_logs, k8s_get_secret,
             jenkins_get_builds, argocd_get_apps,
             trivy_scan_image, sonarqube_get_metrics,
             docker_list_containers, git_recent_commits
