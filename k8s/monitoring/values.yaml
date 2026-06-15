@@ -1,0 +1,66 @@
+# Custom values for kube-prometheus-stack Helm chart
+# Configured for MicroK8s with NodePort services to match existing Nginx routing
+
+# ── Grafana ──────────────────────────────────────────────────────────────────
+grafana:
+  adminPassword: "admin123"
+  service:
+    type: NodePort
+    nodePort: 30001
+  # Enable persistence so dashboards survive pod restarts
+  persistence:
+    enabled: true
+    size: 2Gi
+  # Pre-load ArgoCD dashboard
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: "argocd"
+          orgId: 1
+          folder: "ArgoCD"
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/argocd
+  dashboards:
+    argocd:
+      argocd-overview:
+        gnetId: 14191
+        revision: 1
+        datasource: Prometheus
+
+# ── Prometheus ────────────────────────────────────────────────────────────────
+prometheus:
+  service:
+    type: NodePort
+    nodePort: 30090
+  prometheusSpec:
+    # Allow Prometheus to discover ServiceMonitors in ALL namespaces (including argocd)
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}
+    serviceMonitorSelector: {}
+    # Reasonable retention for a small cluster
+    retention: 7d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+
+# ── AlertManager ─────────────────────────────────────────────────────────────
+alertmanager:
+  enabled: false   # Disable alertmanager for now to save resources
+
+# ── Disable components not needed in MicroK8s ─────────────────────────────────
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeProxy:
+  enabled: false
