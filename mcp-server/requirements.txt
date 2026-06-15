@@ -1,8 +1,9 @@
-fastmcp==2.10.6
+fastmcp==2.8.0
 fastapi
 uvicorn
 google-genai
 kubernetes
 httpx
-pydantic<2.12
+pydantic==2.9.2
+pydantic-settings==2.5.2
 python-dotenv
