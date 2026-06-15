@@ -35,9 +35,9 @@ async def chat_endpoint(request: ChatRequest):
             docker_list_containers, git_recent_commits
         ]
 
-        # Use the new SDK with gemini-2.0-flash (supports function calling)
+        # Use the new SDK with gemini-2.0-flash-latest (supports function calling)
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-2.0-flash-latest",
             contents=request.message,
             config=types.GenerateContentConfig(
                 tools=my_tools,
